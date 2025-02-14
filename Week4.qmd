@@ -12,3 +12,17 @@ age_first_mean <- 12  # mean age first approached
 age_first_sd <- 1  # SD of age first approached
 cv_target <- 0.05  # desired coefficient of variation
 ```
+
+## Calculating the element variances
+```{r}
+# Calculating Variance for binary proportions = p(1-p)
+var_ever_smoked <- p_ever_smoked * (1 - p_ever_smoked)
+var_ever_marijuana <- p_ever_marijuana * (1 - p_ever_marijuana)
+
+# Variance is SD squared
+var_age_first <- age_first_sd^2
+
+cat("Variance for ever smoked:", round(var_ever_smoked, 3), "\n")
+cat("Variance for ever marijuana:", round(var_ever_marijuana, 3), "\n")
+cat("Variance for age first approached:", round(var_age_first, 3), "\n")
+```
