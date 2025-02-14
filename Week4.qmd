@@ -54,3 +54,16 @@ cat("Required sample size for marijuana:", ceiling(n_marijuana), "\n")
 cat("Required sample size for age:", ceiling(n_age), "\n")
 ```
 
+## Summarizing
+
+```{r}
+results_df <- data.frame(
+  Variable = c("Ever Smoked", "Ever Marijuana", "Age First Approached"),
+  Parameter = c(p_ever_smoked, p_ever_marijuana, age_first_mean),
+  Element_Variance = c(var_ever_smoked, var_ever_marijuana, var_age_first),
+  Desired_Variance = c(desired_var_smoked, desired_var_marijuana, desired_var_age),
+  Required_n = ceiling(c(n_smoked, n_marijuana, n_age))
+)
+
+knitr::kable(results_df, digits = 4)
+```
