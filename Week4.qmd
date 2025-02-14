@@ -44,5 +44,13 @@ cat("Desired sampling variance for age:", round(desired_var_age, 4), "\n")
 ## SRS to calculate required sample sizes
 
 ```{r}
+# Simply using the formula n = var / desired_var
+n_smoked <- var_ever_smoked / desired_var_smoked
+n_marijuana <- var_ever_marijuana / desired_var_marijuana
+n_age <- var_age_first / desired_var_age
 
+cat("Required sample size for smoking:", ceiling(n_smoked), "\n")
+cat("Required sample size for marijuana:", ceiling(n_marijuana), "\n")
+cat("Required sample size for age:", ceiling(n_age), "\n")
 ```
+
