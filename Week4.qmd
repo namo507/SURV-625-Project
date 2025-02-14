@@ -26,3 +26,23 @@ cat("Variance for ever smoked:", round(var_ever_smoked, 3), "\n")
 cat("Variance for ever marijuana:", round(var_ever_marijuana, 3), "\n")
 cat("Variance for age first approached:", round(var_age_first, 3), "\n")
 ```
+
+## Calculating the desired sampling variances
+
+```{r}
+# Now the desired sampling variance = (CV * parameter)^2
+desired_var_smoked <- (cv_target * p_ever_smoked)^2
+desired_var_marijuana <- (cv_target * p_ever_marijuana)^2
+desired_var_age <- (cv_target * age_first_mean)^2
+
+cat("Desired sampling variance for smoking:", round(desired_var_smoked, 4), "\n")
+cat("Desired sampling variance for marijuana:", round(desired_var_marijuana, 4), "\n")
+cat("Desired sampling variance for age:", round(desired_var_age, 4), "\n")
+```
+
+
+## SRS to calculate required sample sizes
+
+```{r}
+
+```
