@@ -8,7 +8,7 @@ editor: visual
 ```{r}
 p_ever_smoked <- 0.25  # proportion ever smoked cigarettes
 p_ever_marijuana <- 0.15  # proportion ever smoked marijuana
-age_first_mean <- 12  # mean age first approached
+age_first_mean <- 12  # mean age first approach
 age_first_sd <- 1  # SD of age first approached
 cv_target <- 0.05  # desired coefficient of variation
 ```
