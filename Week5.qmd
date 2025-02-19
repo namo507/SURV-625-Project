@@ -1,0 +1,68 @@
+```{r}
+library(tidyverse)
+library(readxl)
+
+# Reading the Michigan school frame data
+mi_schools <- read_excel("MI_school_frame_head_counts.xls")
+
+# Creating a mapping of counties to regions
+region_mapping <- list(
+  "1" = c(7, 31, 42, 66),
+  "2" = c(22, 27, 36, 55),
+  "3" = c(2, 21, 52),
+  "4" = c(17, 48, 49, 77),
+  "5" = c(1, 4, 6, 16, 20, 26, 35, 60, 65, 68, 69, 71, 72),
+  "6" = c(5, 10, 15, 18, 24, 28, 40, 43, 45, 51, 53, 57, 67, 83),
+  "7" = c(3, 8, 11, 12, 13, 14, 34, 39, 41, 54, 59, 61, 62, 64, 70, 75, 80),
+  "8" = c(9, 19, 23, 25, 29, 30, 33, 37, 38, 46, 47, 56, 73, 78, 81),
+  "9" = c(32, 44, 50, 58, 63, 74, 76, 79, 82)
+)
+
+# Creating a function to assign region based on county_id
+assign_region <- function(county_id) {
+  for(i in 1:length(region_mapping)) {
+    if(county_id %in% region_mapping[[i]]) {
+      return(as.character(i))
+    }
+  }
+  return(NA)
+}
+```
+```{r}
+# Adding region to the dataset
+mi_schools$region <- sapply(mi_schools$COUNTY_ID, assign_region)
+
+# Calculating population totals by region
+region_totals <- mi_schools %>%
+  group_by(region) %>%
+  summarize(
+    total_students = sum(tot_all),
+    n_schools = n()
+  ) %>%
+  mutate(
+    prop_allocation = total_students / sum(total_students)
+  )
+
+# Creating nice looking table
+knitr::kable(
+  region_totals,
+  col.names = c("Region", "Total Students", "Number of Schools", "Proportionate Allocation"),
+  digits = c(0, 0, 0, 4),
+  caption = "Student Population and Proportionate Allocation by Region"
+)
+```
+
+```{r}
+# Example with hypothetical sample size
+example_n <- 1000
+region_totals %>%
+  mutate(
+    sample_size = round(prop_allocation * example_n)
+  ) %>%
+  knitr::kable(
+    col.names = c("Region", "Total Students", "Number of Schools", 
+                  "Proportionate Allocation", "Sample Size (n=1000)"),
+    digits = c(0, 0, 0, 4, 0),
+    caption = "Example Allocation with n=1000"
+  )
+```
