@@ -43,7 +43,6 @@ region_totals <- mi_schools %>%
     prop_allocation = total_students / sum(total_students)
   )
 
-# Creating nice looking table
 knitr::kable(
   region_totals,
   col.names = c("Region", "Total Students", "Number of Schools", "Proportionate Allocation"),
