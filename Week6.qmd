@@ -1,0 +1,109 @@
+---
+title: "Week 6 Sampling Project Analysis"
+format: pdf
+editor: visual
+---
+
+## Initial Parameters
+```{r}
+# Design effects from previous study
+deff_smoked <- 2.5    # design effect for ever smoked cigarette
+deff_marijuana <- 2.0 # design effect for ever smoked marijuana
+deff_age <- 1.7      # design effect for age when first asked
+
+# Previous study parameters
+n_students <- 7500    # total sample size
+n_clusters <- 150     # number of clusters (schools)
+
+# Average cluster size
+b_bar <- n_students / n_clusters
+cat("Average cluster size (b-bar):", b_bar, "\n")
+
+# Cost parameters
+total_budget <- 500000  # total budget
+cost_per_cluster <- 3000 # cost per school
+cost_per_student <- 50   # cost per completed questionnaire
+```
+
+## Calculate Synthetic roh Values
+
+Using the formula: roh = (deff - 1)/(b_bar - 1)
+
+```{r}
+# Function to calculate roh
+calculate_roh <- function(deff, b_bar) {
+  roh <- (deff - 1)/(b_bar - 1)
+  return(roh)
+}
+
+# Calculate roh for each variable
+roh_smoked <- calculate_roh(deff_smoked, b_bar)
+roh_marijuana <- calculate_roh(deff_marijuana, b_bar)
+roh_age <- calculate_roh(deff_age, b_bar)
+
+# Create results table
+roh_results <- data.frame(
+  Variable = c("Ever Smoked", "Ever Marijuana", "Age First Asked"),
+  Design_Effect = c(deff_smoked, deff_marijuana, deff_age),
+  Roh = c(roh_smoked, roh_marijuana, roh_age)
+)
+
+knitr::kable(roh_results, 
+             digits = 4,
+             caption = "Synthetic roh Values by Variable")
+```
+
+## Cost Analysis
+
+Calculating maximum possible number of clusters and students given budget constraints:
+
+```{r}
+# Function to calculate total cost
+calculate_total_cost <- function(n_clusters, students_per_cluster) {
+  cluster_costs <- n_clusters * cost_per_cluster
+  student_costs <- n_clusters * students_per_cluster * cost_per_student
+  total_cost <- cluster_costs + student_costs
+  return(total_cost)
+}
+
+# Function to calculate maximum clusters and students
+calculate_max_samples <- function(budget, cost_cluster, cost_student) {
+  # Maximum possible clusters if all budget spent on clusters
+  max_clusters <- floor(budget/cost_cluster)
+  
+  # Maximum possible students if all budget spent on students
+  max_students <- floor(budget/cost_student)
+  
+  return(list(max_clusters = max_clusters, 
+              max_students = max_students))
+}
+
+max_samples <- calculate_max_samples(total_budget, cost_per_cluster, cost_per_student)
+
+cat("Maximum possible clusters (if only clusters):", max_samples$max_clusters, "\n")
+cat("Maximum possible students (if only students):", max_samples$max_students, "\n")
+```
+
+## Summary Table
+
+```{r summary}
+summary_df <- data.frame(
+  Parameter = c("Average Cluster Size (b-bar)", 
+                "Total Budget",
+                "Cost per Cluster",
+                "Cost per Student",
+                "Maximum Possible Clusters",
+                "Maximum Possible Students"),
+  Value = c(b_bar,
+            total_budget,
+            cost_per_cluster,
+            cost_per_student,
+            max_samples$max_clusters,
+            max_samples$max_students)
+)
+
+knitr::kable(summary_df, 
+             col.names = c("Parameter", "Value"),
+             digits = 0,
+             caption = "Summary of Key Parameters")
+```
