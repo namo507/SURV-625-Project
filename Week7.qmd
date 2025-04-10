@@ -50,3 +50,19 @@ cat("Optimal number of clusters for Smoked: ", firstcluster_smoked, "\n")
 cat("Optimal number of clusters for Marijuana: ", firstcluster_marijuana, "\n")
 cat("Optimal number of clusters for Age: ", firstcluster_age, "\n")
 ```
+
+
+```{r}
+# Create a data frame to store the results
+results <- data.frame(
+  Variable = c("Smoked", "Marijuana", "Age"),
+  Optimum_Subsample_Size = c(mopt_smoked, mopt_marijuana, mopt_age),
+  Optimal_Clusters = c(firstcluster_smoked, firstcluster_marijuana, firstcluster_age)
+)
+
+# Save the results to a CSV file
+write.csv(results, "optimum_sampling_design.csv", row.names = FALSE)
+
+# Notify user that results were saved
+cat("Results saved to 'optimum_sampling_design.csv'\n")
+```
