@@ -27,6 +27,11 @@ mopt_smoked <- sqrt((c_n/c_m) * ((1-roh_smoked)/roh_smoked))
 mopt_marijuana <- sqrt((c_n/c_m) * ((1-roh_marijuana)/roh_marijuana))
 mopt_age <- sqrt((c_n/c_m) * ((1-roh_age)/roh_age))
 
+# Print the optimum subsample sizes
+cat("Optimum subsample size for Smoked: ", mopt_smoked, "\n")
+cat("Optimum subsample size for Marijuana: ", mopt_marijuana, "\n")
+cat("Optimum subsample size for Age: ", mopt_age, "\n")
+
 ```
 
 $$
@@ -39,4 +44,9 @@ sampling_cost <- 500000
 firstcluster_smoked <- sampling_cost/(c_n + (c_m * mopt_smoked))
 firstcluster_marijuana <- sampling_cost/(c_n + (c_m * mopt_marijuana))
 firstcluster_age <- sampling_cost/(c_n + (c_m * mopt_age))
+
+# Print the optimal number of clusters for each variable
+cat("Optimal number of clusters for Smoked: ", firstcluster_smoked, "\n")
+cat("Optimal number of clusters for Marijuana: ", firstcluster_marijuana, "\n")
+cat("Optimal number of clusters for Age: ", firstcluster_age, "\n")
 ```
