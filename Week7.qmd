@@ -1,0 +1,42 @@
+---
+title: "Week 7 Sampling Project Analysis"
+format: pdf
+editor: visual
+---
+
+## Optimum sub-sample size
+
+```{r}
+## c_n and c_m
+c_n <- 3000
+c_m <- 50
+
+# roh for each variable 
+roh_smoked <- 0.0306
+roh_marijuana <- 0.0204
+roh_age <- 0.0143
+```
+
+$$
+m_{opt} = \sqrt{ C_n/C_m * 1-roh/roh }
+$$
+
+```{r}
+### computing subsample size for each roh
+mopt_smoked <- sqrt((c_n/c_m) * ((1-roh_smoked)/roh_smoked))
+mopt_marijuana <- sqrt((c_n/c_m) * ((1-roh_marijuana)/roh_marijuana))
+mopt_age <- sqrt((c_n/c_m) * ((1-roh_age)/roh_age))
+
+```
+
+$$
+Samplingcost = n * c_n + n * m * c_m
+$$
+
+```{r}
+### corresponding optimal number of first stage clusters, given the total budget 
+sampling_cost <- 500000
+firstcluster_smoked <- sampling_cost/(c_n + (c_m * mopt_smoked))
+firstcluster_marijuana <- sampling_cost/(c_n + (c_m * mopt_marijuana))
+firstcluster_age <- sampling_cost/(c_n + (c_m * mopt_age))
+```
