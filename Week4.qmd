@@ -67,3 +67,5 @@ results_df <- data.frame(
 
 knitr::kable(results_df, digits = 4)
 ```
+
+Inferences:
