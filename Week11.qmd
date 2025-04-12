@@ -3,3 +3,42 @@ title: "Week 11"
 format: pdf
 editor: visual
 ---
+
+## Step 1: Load the data and examine the school roster
+
+```{r}
+library(readxl)
+library(dplyr)
+library(stringr)
+
+raw_data <- read_excel("sample_school_student_list.xls", col_names = FALSE)
+
+colnames(raw_data) <- c("Col1", "Col2", "Col3")
+
+student_rows <- raw_data %>%
+  filter(!is.na(Col1), !is.na(Col2), !is.na(Col3)) %>%  
+  filter(str_detect(Col1, "^[78]$"),                    
+         str_detect(Col2, "^[A-Z]"),                    
+         !str_detect(Col1, "Grade|Teacher|Surname"))    
+
+# Count total students
+actual_school_size <- nrow(student_rows)
+print(paste("Actual school size:", actual_school_size))
+
+# Count students by grade
+grade_counts <- student_rows %>%
+  group_by(Col1) %>%
+  summarize(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+# Rename columns for clarity
+colnames(grade_counts) <- c("Grade", "Count", "Percentage")
+print(grade_counts)
+
+# Add student IDs for reference
+student_rows <- student_rows %>%
+  mutate(student_id = row_number())
+
+# Preview the data
+head(student_rows)
+```
