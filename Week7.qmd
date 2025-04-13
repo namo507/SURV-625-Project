@@ -23,9 +23,9 @@ $$
 
 ```{r}
 ### computing subsample size for each roh
-mopt_smoked <- sqrt((c_n/c_m) * ((1-roh_smoked)/roh_smoked))
-mopt_marijuana <- sqrt((c_n/c_m) * ((1-roh_marijuana)/roh_marijuana))
-mopt_age <- sqrt((c_n/c_m) * ((1-roh_age)/roh_age))
+mopt_smoked <- ceiling(sqrt((c_n/c_m) * ((1-roh_smoked)/roh_smoked)))
+mopt_marijuana <- ceiling(sqrt((c_n/c_m) * ((1-roh_marijuana)/roh_marijuana)))
+mopt_age <- ceiling(sqrt((c_n/c_m) * ((1-roh_age)/roh_age)))
 
 # Print the optimum subsample sizes
 cat("Optimum subsample size for Smoked: ", mopt_smoked, "\n")
@@ -51,18 +51,100 @@ cat("Optimal number of clusters for Marijuana: ", firstcluster_marijuana, "\n")
 cat("Optimal number of clusters for Age: ", firstcluster_age, "\n")
 ```
 
+## Selecting overall sample size
 
 ```{r}
-# Create a data frame to store the results
-results <- data.frame(
-  Variable = c("Smoked", "Marijuana", "Age"),
-  Optimum_Subsample_Size = c(mopt_smoked, mopt_marijuana, mopt_age),
-  Optimal_Clusters = c(firstcluster_smoked, firstcluster_marijuana, firstcluster_age)
-)
+## Choosing to use the mean of the sample sizes
+m_opt_overall <- 44
+n_opt <- sampling_cost / (c_n + m_opt_overall * c_m)
+n_total <- n_opt * m_opt_overall
 
-# Save the results to a CSV file
-write.csv(results, "optimum_sampling_design.csv", row.names = FALSE)
+cat("Optimal number of subsample size (m):", m_opt_overall, "\n")
+cat("Optimal number of clusters (n_opt):", n_opt, "\n")
+cat("Overall sample size (n_total):", n_total, "\n")
 
-# Notify user that results were saved
-cat("Results saved to 'optimum_sampling_design.csv'\n")
 ```
+
+## Design effect and sampling variance
+
+$$
+deff_{new} = 1+(m_{new} -1) * roh
+$$
+
+```{r}
+deff_smoked <- 1 + (m_opt_overall - 1) * roh_smoked
+deff_marijuana <- 1 + (m_opt_overall - 1) * roh_marijuana
+deff_age <- 1 + (m_opt_overall - 1) * roh_age
+
+cat("Design effect for smoked:", deff_smoked, "\n")
+cat("Design effect for marijuana:", deff_marijuana, "\n")
+cat("Design effect for age:", deff_age, "\n")
+
+```
+
+$$
+var(SRS) = p(1-p)/nm-1
+$$
+
+```{r}
+# Element Variance 
+var_ever_smoked <- 0.188
+var_ever_marijuana <- 0.128
+var_age_first <- 1
+
+new_varsrs_smoked <- var_ever_smoked/(n_total-1)
+new_varsrs_marijuana <- var_ever_marijuana/(n_total-1)
+new_varsrs_age <- var_age_first/(n_total-1)  
+
+
+# Print new SRS variances
+cat("New SRS Variance for Smoked: ", new_varsrs_smoked, "\n")
+cat("New SRS Variance for Marijuana: ", new_varsrs_marijuana, "\n")
+cat("New SRS Variance for Age: ", new_varsrs_age, "\n")
+```
+
+$$
+var_{cluster-new} (\bar{y}) = var_{srs} * deff_{new}
+$$
+
+```{r}
+## New cluster design 
+varcluster_smoked <- new_varsrs_smoked * deff_smoked 
+varcluster_marijuana <- new_varsrs_marijuana * deff_marijuana 
+varcluster_age <- new_varsrs_age * deff_age
+
+cat("Expected Cluster Sample Variance for Smoked: ", varcluster_smoked, "\n")
+cat("Expected Cluster Sample Variance for Marijuana: ", varcluster_marijuana, "\n")
+cat("Expected Cluster Sample Variance for Age: ", varcluster_age, "\n")
+```
+
+```{r}
+## Sampling Fraction and FPC
+N <- 830138
+
+sampling_fraction <- n_total/N
+FPC <- 1 - sampling_fraction
+
+# Print results
+cat("Sampling fraction (f):", sampling_fraction, "\n")
+cat("Finite Population Correction (FPC):", FPC, "\n")
+```
+
+## Justification for choosing subsample
+
+```{r}
+## Justification for choosing subsample
+
+precision_smoked <- sqrt(varcluster_smoked)
+precision_marijuana <- sqrt(varcluster_marijuana)
+precision_age <- sqrt(varcluster_age)
+
+cat("Precision for Smoked:", precision_smoked, "\n")
+cat("Precision for Marijuana:", precision_marijuana, "\n")
+cat("Precision for Age:", precision_age, "\n")
+
+```
+
+
+
+

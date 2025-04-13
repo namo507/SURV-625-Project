@@ -1,0 +1,144 @@
+---
+title: "Week 8 Sampling Project Analysis"
+format: pdf
+editor: visual
+---
+
+## Sampling fraction accross Stata 
+$$
+f_h = n_h/N_h
+$$
+
+```{r}
+## Proportionate allocation n_opt and 
+n_opt <- 96.15385  
+
+# Given data from week 5
+regions <- c(1:9)
+total_students <- c(2893, 5474, 8044, 4855, 14692, 31140, 177421, 178447, 374755)
+num_schools <- c(16, 30, 30, 31, 69, 123, 598, 517, 923)
+proportions <- c(0.0035, 0.0066, 0.0097, 0.0058, 0.0177, 0.0375, 0.2137, 0.2150, 0.4514)
+
+# Compute allocated clusters
+allocated_clusters <- ceiling((n_opt * proportions))
+
+# Compute first-stage sampling fractions
+sampling_fraction <- allocated_clusters / num_schools
+
+# Create data frame with everything
+region_data <- data.frame(
+  Region = regions,
+  Total_Students = total_students,
+  Num_Schools = num_schools,
+  Proportion = proportions,
+  Allocated_Clusters = round(allocated_clusters, 2),
+  Sampling_Fraction = round(sampling_fraction, 4)
+)
+
+# Output results using cat
+for (i in 1:length(regions)) {
+  cat("Region", regions[i], "allocated clusters:", allocated_clusters[i], "\n")
+  cat("Region", regions[i], "first-stage sampling fraction:", round(sampling_fraction[i], 4), "\n")
+  cat("\n")
+}
+```
+$$
+\sum MOS_hi/n_h
+$$
+## PPeS zone size
+```{r}
+# Order the data frame by Total_Students (ascending)
+ordered_region_data <- region_data[order(region_data$Total_Students), ]
+
+# Create the summary row with column totals
+summary_row <- data.frame(
+  Region = "Total",
+  Total_Students = sum(ordered_region_data$Total_Students),
+  Num_Schools = sum(ordered_region_data$Num_Schools),
+  Proportion = sum(ordered_region_data$Proportion),
+  Allocated_Clusters = sum(ordered_region_data$Allocated_Clusters),
+  Sampling_Fraction = sum(ordered_region_data$Sampling_Fraction)
+)
+
+# Bind the summary row to the original (ordered) data frame
+ordered_region_data_with_total <- rbind(ordered_region_data, summary_row)
+
+# Print the final data frame with the totals row
+print(ordered_region_data_with_total)
+
+# Zone size 
+sum_MOS <- 797721
+Zone_size <- sum_MOS/ordered_region_data_with_total$Allocated_Clusters ## is this correct I am unsure about the denominator, I am unsure if it is this or number of schools 
+
+
+```
+
+## Systemmatic selection 
+$$
+9 * MOS / \sum MOS
+$$
+```{r}
+set.seed(123456) 
+random_start <- round(runif(9, min = 0, max = Zone_size))
+print(random_start)
+
+# Remove the last two digits (floor divide by 100)
+random_starts_trimmed <- floor(random_start / 100)
+
+# Print the result
+print(random_starts_trimmed)
+
+first_stage_region1 <- ((9*31140)/sum_MOS) ## I believe this is correct 
+first_stage_region2 <- ((9*14692)/sum_MOS)
+first_stage_region3 <- ((9*8044)/sum_MOS)
+first_stage_region4 <- ((9*4855)/sum_MOS)
+first_stage_region5 <- ((9*2893)/sum_MOS)
+first_stage_region6 <- ((9*2893)/sum_MOS)
+first_stage_region7 <- ((9*2893)/sum_MOS)
+first_stage_region8 <- ((9*2893)/sum_MOS)
+first_stage_region9 <- ((9*2893)/sum_MOS)
+
+# Output the values
+cat("First-stage sampling fraction for Region 1:", first_stage_region1, "\n")
+cat("First-stage sampling fraction for Region 2:", first_stage_region2, "\n")
+cat("First-stage sampling fraction for Region 3:", first_stage_region3, "\n")
+cat("First-stage sampling fraction for Region 4:", first_stage_region4, "\n")
+cat("First-stage sampling fraction for Region 5:", first_stage_region5, "\n")
+cat("First-stage sampling fraction for Region 6:", first_stage_region6, "\n")
+cat("First-stage sampling fraction for Region 7:", first_stage_region7, "\n")
+cat("First-stage sampling fraction for Region 8:", first_stage_region8, "\n")
+cat("First-stage sampling fraction for Region 9:", first_stage_region9, "\n")
+```
+
+## Paired selection
+```{r}
+# Define the region numbers you want to include, in order
+selected_regions <- c(6, 5, 3, 4, 1, 1, 1, 1, 1)
+
+# Extract the corresponding rows from ordered_region_data_with_total
+selected_rows_df <- ordered_region_data_with_total[
+  ordered_region_data_with_total$Region %in% selected_regions & 
+  ordered_region_data_with_total$Region != "Total",  # Exclude "Total" row
+]
+
+# Ensure the rows appear in the same order as the selected_regions vector
+selected_rows_df <- do.call(rbind, lapply(selected_regions, function(r) {
+  selected_rows_df[selected_rows_df$Region == r, ]
+}))
+
+# Print the resulting data frame
+print(selected_rows_df)
+
+```
+
+```{r}
+# Sort by Num_Schools to simulate the process of pairing based on size
+pseudo_strata_sorted_df <- selected_rows_df[order(selected_rows_df$Num_Schools), ]
+
+# Create pseudo-strata by pairing consecutive rows
+pseudo_strata <- split(pseudo_strata_sorted_df$Region, ceiling(seq_along(pseudo_strata_sorted_df$Region) / 2))
+
+# Show the pseudo-strata (pairs of regions)
+pseudo_strata
+
+```
