@@ -30,8 +30,8 @@ you sample a single school? Or a linked set of schools?) will depend on your res
 
 ```{r}
 library(knitr)
-n_opt <- 86.95652
-m_opt <- 55
+n_opt <- 96.95652
+m_opt <- 44
 N <- 830138
 sampling_fractions <- c(0.3043478, 0.5739130, 0.8434782, 0.5043478, 1.5391304, 3.2608695, 18.5826083, 18.6956518, 39.2521731)
 f <- n_opt / N
