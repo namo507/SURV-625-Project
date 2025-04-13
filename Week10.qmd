@@ -51,7 +51,7 @@ region_data <- data.frame(
   Num_Schools = num_schools,
   Proportion = proportions,
   Allocated_Clusters = round(allocated_clusters, 2),
-  Sampling_Fraction = round(sampling_fraction, 4),
+  Sampling_Fraction = round(sampling_fractions, 4),
   Required_Subsample = required_subsample_sizes
 )
 kable(region_data)
