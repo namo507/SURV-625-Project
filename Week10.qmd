@@ -57,3 +57,48 @@ region_data <- data.frame(
 kable(region_data)
 ```
 
+
+```{r}
+library(knitr)
+n_opt <- 86.95652  # Optimal cluster size (students per cluster)
+m_opt <- 55  # Optimal number of clusters
+N <- 830138  # Total population size
+
+# These appear to be the number of PSUs (schools) allocated to each stratum
+sampling_fractions <- c(0.3043478, 0.5739130, 0.8434782, 0.5043478, 1.5391304, 3.2608695, 18.5826083, 18.6956518, 39.2521731)
+
+# Overall sampling fraction
+f <- (n_opt * m_opt) / N  # This should be (total sample size)/(population size)
+
+# Calculate required subsample sizes - the issue is in this calculation
+# The correct formula should use the sampling interval for each stratum (m*_h)
+# For each stratum h, m*_h = Total_Students_h / allocated_clusters_h
+
+regions <- c(1:9)
+total_students <- c(2893, 5474, 8044, 4855, 14692, 31140, 177421, 178447, 374755)
+num_schools <- c(16, 30, 30, 31, 69, 123, 598, 517, 923)
+proportions <- c(0.0035, 0.0066, 0.0097, 0.0058, 0.0177, 0.0375, 0.2137, 0.2150, 0.4514)
+
+# Compute allocated clusters correctly
+allocated_clusters <- ceiling(m_opt * proportions)
+
+# Calculate sampling intervals for each stratum
+sampling_intervals <- total_students / allocated_clusters
+
+# Calculate required subsample sizes
+# For EPSEM across strata, required subsample = n_opt
+# But we need to adjust by the ratio of MOS to actual size
+# If MOS equals actual size, then required subsample = n_opt
+required_subsample_sizes <- n_opt  # Same for all strata to maintain EPSEM
+
+region_data <- data.frame(
+  Region = regions,
+  Total_Students = total_students,
+  Num_Schools = num_schools,
+  Proportion = proportions,
+  Allocated_Clusters = allocated_clusters,
+  Sampling_Interval = round(sampling_intervals, 1),
+  Required_Subsample = round(required_subsample_sizes, 2)
+)
+kable(region_data)
+```
