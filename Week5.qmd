@@ -34,7 +34,7 @@ mi_schools$region <- sapply(mi_schools$COUNTY_ID, assign_region)
 
 # Calculating population totals by region
 region_totals <- mi_schools %>%
-  group_by(region) %>%
+  group_by(Region) %>%
   summarize(
     total_students = sum(tot_all),
     n_schools = n()

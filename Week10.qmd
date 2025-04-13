@@ -1,0 +1,57 @@
+---
+title: "Week 10"
+format: pdf
+editor: visual
+---
+
+# Week 10- Tasks
+
+1. Given your overall $m_{opt}, n_{opt}$ and N (based on the sampling frame), you’ve already
+computed the overall sampling fraction, 𝑓. For each of the nine strata, compute the
+required number of students to subsample from each sampled school based on the
+stratified PPeS design **in order to maintain epsem across all strata.**
+
+2. Do each of the schools that you sampled in a given region have the minimum sufficient
+size, given the stratum-specific subsample sizes computed in Task #1? Do subsequent
+schools on the list have the minimum sufficient size? If not, what will you do?
+
+3. Begin to describe how you will physically select the subsample of students within a given
+sampled school (or set of linked schools). What will your second-stage sampling rate be for a
+given school within a given stratum? How will you acquire the updated rosters from each
+school? What technique will you use to select the sample at the specified second-stage
+rate?
+
+4. Write down the overall sampling fraction based on the stratified PPeS design, indicating
+the overall probability of inclusion for a given student, from a given school (or linked set of
+schools), in a given stratum. Be careful with notation. Keep in mind that the MOS values
+used for the sampled schools at the first stage and the denominator at the second stage (Did
+you sample a single school? Or a linked set of schools?) will depend on your response to Task
+#2 above.
+
+```{r}
+library(knitr)
+n_opt <- 86.95652
+m_opt <- 55
+N <- 830138
+sampling_fractions <- c(0.3043478, 0.5739130, 0.8434782, 0.5043478, 1.5391304, 3.2608695, 18.5826083, 18.6956518, 39.2521731)
+f <- n_opt / N
+required_subsample_sizes <- sampling_fractions * f * m_opt
+required_subsample_sizes
+
+regions <- c(1:9)
+total_students <- c(2893, 5474, 8044, 4855, 14692, 31140, 177421, 178447, 374755)
+num_schools <- c(16, 30, 30, 31, 69, 123, 598, 517, 923)
+proportions <- c(0.0035, 0.0066, 0.0097, 0.0058, 0.0177, 0.0375, 0.2137, 0.2150, 0.4514)
+
+region_data <- data.frame(
+  Region = regions,
+  Total_Students = total_students,
+  Num_Schools = num_schools,
+  Proportion = proportions,
+  Allocated_Clusters = round(allocated_clusters, 2),
+  Sampling_Fraction = round(sampling_fraction, 4),
+  Required_Subsample = required_subsample_sizes
+)
+kable(region_data)
+```
+
