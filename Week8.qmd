@@ -67,8 +67,17 @@ ordered_region_data_with_total <- rbind(ordered_region_data, summary_row)
 print(ordered_region_data_with_total)
 
 # Zone size 
-MOS <- 797721
-Zone_size <- MOS/ordered_region_data_with_total$Allocated_Clusters ## is this correct I am unsure about the denominator 
+sum_MOS <- 797721
+Zone_size <- sum_MOS/ordered_region_data_with_total$Allocated_Clusters ## is this correct I am unsure about the denominator 
 
+
+```
+
+## Systemmatic selection 
+$$
+9 * MOS / \sum MOS
+$$
+```{r}
+first_stage <- 9*(ordered_region_data_with_total$Allocated_Clusters/sum_MOS) ## I believe this is correct 
 
 ```
