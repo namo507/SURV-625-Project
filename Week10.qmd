@@ -102,3 +102,17 @@ region_data <- data.frame(
 )
 kable(region_data)
 ```
+
+
+The table you have provided shows the results of your calculations for the nine strata. Based on your code, the "Required_Subsample" for each stratum was computed using the formula:
+Required Subsample$h$ = Sampling Fraction${opt}$ / N) × m${opt}$
+Where:
+•
+Sampling Fraction$_h$ is the value provided in the "Sampling_Fraction" column for each stratum.
+•
+n$_{opt}$ = 86.95652
+•
+N = 830138
+•
+m$_{opt}$ = 55
+Your code correctly implements this formula. However, the crucial point is whether this formula and the "Sampling_Fraction" values are appropriate for determining the required subsample size to maintain epsem across all strata in a stratified PPeS design.
