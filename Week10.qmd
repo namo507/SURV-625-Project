@@ -36,7 +36,9 @@ N <- 830138
 sampling_fractions <- c(0.3043478, 0.5739130, 0.8434782, 0.5043478, 1.5391304, 3.2608695, 18.5826083, 18.6956518, 39.2521731)
 f <- n_opt / N
 required_subsample_sizes <- sampling_fractions * f * m_opt
-required_subsample_sizes
+
+# Compute allocated clusters
+allocated_clusters <- ceiling((n_opt * proportions))
 
 regions <- c(1:9)
 total_students <- c(2893, 5474, 8044, 4855, 14692, 31140, 177421, 178447, 374755)
