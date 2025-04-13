@@ -1,3 +1,9 @@
+---
+title: "Week 6 Sampling Project Analysis"
+format: pdf
+editor: visual
+---
+
 ## Sampling fraction accross Stata 
 $$
 f_h = n_h/N_h
@@ -19,10 +25,50 @@ allocated_clusters <- (n_opt * proportions)
 # Compute first-stage sampling fractions
 sampling_fraction <- allocated_clusters / num_schools
 
+# Create data frame with everything
+region_data <- data.frame(
+  Region = regions,
+  Total_Students = total_students,
+  Num_Schools = num_schools,
+  Proportion = proportions,
+  Allocated_Clusters = round(allocated_clusters, 2),
+  Sampling_Fraction = round(sampling_fraction, 4)
+)
+
 # Output results using cat
 for (i in 1:length(regions)) {
   cat("Region", regions[i], "allocated clusters:", allocated_clusters[i], "\n")
   cat("Region", regions[i], "first-stage sampling fraction:", round(sampling_fraction[i], 4), "\n")
   cat("\n")
 }
+```
+$$
+\sum MOS_hi/n_h
+$$
+## PPeS zone size
+```{r}
+# Order the data frame by Total_Students (ascending)
+ordered_region_data <- region_data[order(region_data$Total_Students), ]
+
+# Create the summary row with column totals
+summary_row <- data.frame(
+  Region = "Total",
+  Total_Students = sum(ordered_region_data$Total_Students),
+  Num_Schools = sum(ordered_region_data$Num_Schools),
+  Proportion = sum(ordered_region_data$Proportion),
+  Allocated_Clusters = sum(ordered_region_data$Allocated_Clusters),
+  Sampling_Fraction = sum(ordered_region_data$Sampling_Fraction)
+)
+
+# Bind the summary row to the original (ordered) data frame
+ordered_region_data_with_total <- rbind(ordered_region_data, summary_row)
+
+# Print the final data frame with the totals row
+print(ordered_region_data_with_total)
+
+# Zone size 
+MOS <- 797721
+Zone_size <- MOS/ordered_region_data_with_total$Allocated_Clusters ## is this correct I am unsure about the denominator 
+
+
 ```
