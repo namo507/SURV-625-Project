@@ -20,7 +20,7 @@ num_schools <- c(16, 30, 30, 31, 69, 123, 598, 517, 923)
 proportions <- c(0.0035, 0.0066, 0.0097, 0.0058, 0.0177, 0.0375, 0.2137, 0.2150, 0.4514)
 
 # Compute allocated clusters
-allocated_clusters <- (n_opt * proportions)
+allocated_clusters <- ceiling((n_opt * proportions))
 
 # Compute first-stage sampling fractions
 sampling_fraction <- allocated_clusters / num_schools
