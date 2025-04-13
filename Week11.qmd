@@ -55,38 +55,50 @@ $242 \times f_{2nd} = m^*_7$
 Therefore, the sampling rate that you would apply to this school to achieve EPSEM is:
 $\boxed{f_{2nd} = \frac{m^*_7}{242}}$
 
+
 ```{r}
 # Calculating the sampling rate for EPSEM
-
 # Given parameters
 mos_school <- 242  # Measure of size for this school from frame
 actual_school_size <- 219  # Actual number of students from roster
-m_star_h <- 40  # Example sampling interval for Region 7 (replace with your actual value)
+m_star_h <- 9337.95  # Sampling interval for Region 7 
 
 # Calculate the sampling rate to maintain EPSEM
 sampling_rate <- m_star_h / mos_school
 print(paste("Within-school sampling rate:", round(sampling_rate, 4)))
 
-# Expected sample size if applied to actual student count
-expected_sample_size <- actual_school_size * sampling_rate
-print(paste("Expected sample size:", round(expected_sample_size, 2), "students"))
+print(paste("Sampling rate value:", sampling_rate))
+print(paste("Sampling interval (k) =", 1/sampling_rate))
 ```
 
 ## Implementing systematic sampling for student selection
 
 ```{r}
-# Set seed for reproducibility
-set.seed(625)
+# First, calculate the expected sample size from this school
+expected_sample_size <- actual_school_size * (sampling_rate / mos_school)
+print(paste("Expected sample size:", round(expected_sample_size, 2), "students"))
 
-# Function to implement systematic sampling
-systematic_sample <- function(data, sampling_rate) {
+# Since sampling rate > 1 doesn't make sense for within-school sampling,
+# we need to correctly interpret what this means:
+# - The sampling rate is actually telling us we need to select ~38.59 students
+# - This is approximately 1/6 of the total students (219)
+# - So our within-school sampling rate should be around 38.59/219 ≈ 0.176
+
+# Calculate the correct within-school sampling probability
+within_school_prob <- min(1, n_opt / actual_school_size)
+where_n_opt <- sampling_rate
+print(paste("Adjusted within-school sampling probability:", round(within_school_prob, 4)))
+
+# Function for systematic random sampling
+systematic_sample <- function(data, expected_sample_size) {
   # Total number of students
   N <- nrow(data)
   
-  # Calculate sampling interval (k = 1/sampling_rate)
-  k <- 1/sampling_rate
+  # Calculate sampling interval
+  k <- N / expected_sample_size
   
   # Select a random start between 1 and k
+  set.seed(625)  # For reproducibility
   random_start <- runif(1, min = 1, max = k)
   
   # Generate selection numbers
@@ -94,6 +106,10 @@ systematic_sample <- function(data, sampling_rate) {
   
   # Round down to integer positions
   selection_indices <- floor(selection_numbers)
+  
+  # Ensure no duplicates and valid indices
+  selection_indices <- unique(selection_indices)
+  selection_indices <- selection_indices[selection_indices <= N]
   
   # Select the sample - sampling WITHOUT replacement
   sampled_students <- data[selection_indices, ]
@@ -106,14 +122,15 @@ systematic_sample <- function(data, sampling_rate) {
   ))
 }
 
-# Apply systematic sampling
-sampling_result <- systematic_sample(student_rows, sampling_rate)
+# Apply systematic sampling with the expected sample size
+sampling_result <- systematic_sample(student_rows, 38.59)
 
 # Print sample details
 print(paste("Random start:", round(sampling_result$random_start, 2)))
 print(paste("Sampling interval:", round(sampling_result$interval, 2)))
 print(paste("Actual sample size:", nrow(sampling_result$sample), "students"))
 ```
+
 
 ## Analyzing the selected sample
 
@@ -127,6 +144,16 @@ sample_summary <- sampling_result$sample %>%
 # Rename columns for clarity
 colnames(sample_summary) <- c("Grade", "Count", "Percentage")
 print(sample_summary)
+
+# Compare with population distribution
+comparison <- data.frame(
+  Grade = grade_counts$Grade,
+  Population_Count = grade_counts$Count,
+  Population_Pct = grade_counts$Percentage,
+  Sample_Count = sample_summary$Count,
+  Sample_Pct = sample_summary$Percentage
+)
+print(comparison)
 
 # Create a detailed selection table
 selection_details <- data.frame(
@@ -145,38 +172,40 @@ head(selection_details, 10)
 ## Now to verify EPSEM property
 
 ```{r}
-# Calculate the overall selection probability for each student
-# 1st stage: School selected with probability proportional to MOS (242)
-# 2nd stage: Within-school selection with rate m*_7/242
-# Overall probability = 1/m*_7
+# Calculate the selection probabilities
+first_stage_prob <- mos_school / sum_mos_region7  # Would need total MOS for region 7
+second_stage_prob <- nrow(sampling_result$sample) / actual_school_size
+overall_intended_prob <- 1/m_star_h
 
-overall_prob <- 1/m_star_h
-first_stage_prob <- mos_school / sum(mos_school)  # In practice, this would use the total MOS for the stratum
-second_stage_prob <- sampling_rate
+# Expected sample size calculation
+expected_sample_size <- actual_school_size * (sampling_rate / mos_school)
 
+# Create verification table
 verification <- data.frame(
-  Parameter = c("School MOS", 
-                "Actual school size", 
-                "Sampling interval (m*_7)", 
-                "Within-school sampling rate",
-                "Expected sample size",
-                "Actual sample size",
-                "First-stage probability (approx)",
-                "Second-stage probability",
-                "Overall selection probability"),
-  Value = c(mos_school,
-            actual_school_size,
-            m_star_h,
-            sampling_rate,
-            expected_sample_size,
-            nrow(sampling_result$sample),
-            first_stage_prob,
-            second_stage_prob,
-            overall_prob)
+  Parameter = c(
+    "School MOS", 
+    "Actual school size", 
+    "Sampling interval (m*_7)", 
+    "Intended within-school sampling rate",
+    "Expected sample size",
+    "Actual sample size",
+    "Effective sampling rate",
+    "Overall selection probability (1/m*_7)"
+  ),
+  Value = c(
+    mos_school,
+    actual_school_size,
+    m_star_h,
+    sampling_rate / mos_school,
+    expected_sample_size,
+    nrow(sampling_result$sample),
+    nrow(sampling_result$sample) / actual_school_size,
+    overall_intended_prob
+  )
 )
 
 knitr::kable(verification, 
-             digits = 4,
+             digits = 6,
              caption = "Verification of EPSEM Property")
 ```
 
