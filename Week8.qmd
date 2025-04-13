@@ -110,3 +110,35 @@ cat("First-stage sampling fraction for Region 8:", first_stage_region8, "\n")
 cat("First-stage sampling fraction for Region 9:", first_stage_region9, "\n")
 ```
 
+## Paired selection
+```{r}
+# Define the region numbers you want to include, in order
+selected_regions <- c(6, 5, 3, 4, 1, 1, 1, 1, 1)
+
+# Extract the corresponding rows from ordered_region_data_with_total
+selected_rows_df <- ordered_region_data_with_total[
+  ordered_region_data_with_total$Region %in% selected_regions & 
+  ordered_region_data_with_total$Region != "Total",  # Exclude "Total" row
+]
+
+# Ensure the rows appear in the same order as the selected_regions vector
+selected_rows_df <- do.call(rbind, lapply(selected_regions, function(r) {
+  selected_rows_df[selected_rows_df$Region == r, ]
+}))
+
+# Print the resulting data frame
+print(selected_rows_df)
+
+```
+
+```{r}
+# Sort by Num_Schools to simulate the process of pairing based on size
+pseudo_strata_sorted_df <- selected_rows_df[order(selected_rows_df$Num_Schools), ]
+
+# Create pseudo-strata by pairing consecutive rows
+pseudo_strata <- split(pseudo_strata_sorted_df$Region, ceiling(seq_along(pseudo_strata_sorted_df$Region) / 2))
+
+# Show the pseudo-strata (pairs of regions)
+pseudo_strata
+
+```
