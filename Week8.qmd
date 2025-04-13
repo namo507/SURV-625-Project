@@ -68,7 +68,7 @@ print(ordered_region_data_with_total)
 
 # Zone size 
 sum_MOS <- 797721
-Zone_size <- sum_MOS/ordered_region_data_with_total$Allocated_Clusters ## is this correct I am unsure about the denominator 
+Zone_size <- sum_MOS/ordered_region_data_with_total$Allocated_Clusters ## is this correct I am unsure about the denominator, I am unsure if it is this or number of schools 
 
 
 ```
@@ -78,6 +78,35 @@ $$
 9 * MOS / \sum MOS
 $$
 ```{r}
-first_stage <- 9*(ordered_region_data_with_total$Allocated_Clusters/sum_MOS) ## I believe this is correct 
+set.seed(123456) 
+random_start <- round(runif(9, min = 0, max = Zone_size))
+print(random_start)
 
+# Remove the last two digits (floor divide by 100)
+random_starts_trimmed <- floor(random_start / 100)
+
+# Print the result
+print(random_starts_trimmed)
+
+first_stage_region1 <- ((9*31140)/sum_MOS) ## I believe this is correct 
+first_stage_region2 <- ((9*14692)/sum_MOS)
+first_stage_region3 <- ((9*8044)/sum_MOS)
+first_stage_region4 <- ((9*4855)/sum_MOS)
+first_stage_region5 <- ((9*2893)/sum_MOS)
+first_stage_region6 <- ((9*2893)/sum_MOS)
+first_stage_region7 <- ((9*2893)/sum_MOS)
+first_stage_region8 <- ((9*2893)/sum_MOS)
+first_stage_region9 <- ((9*2893)/sum_MOS)
+
+# Output the values
+cat("First-stage sampling fraction for Region 1:", first_stage_region1, "\n")
+cat("First-stage sampling fraction for Region 2:", first_stage_region2, "\n")
+cat("First-stage sampling fraction for Region 3:", first_stage_region3, "\n")
+cat("First-stage sampling fraction for Region 4:", first_stage_region4, "\n")
+cat("First-stage sampling fraction for Region 5:", first_stage_region5, "\n")
+cat("First-stage sampling fraction for Region 6:", first_stage_region6, "\n")
+cat("First-stage sampling fraction for Region 7:", first_stage_region7, "\n")
+cat("First-stage sampling fraction for Region 8:", first_stage_region8, "\n")
+cat("First-stage sampling fraction for Region 9:", first_stage_region9, "\n")
 ```
+
