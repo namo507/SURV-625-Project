@@ -1,5 +1,5 @@
 ---
-title: "Week 6 Sampling Project Analysis"
+title: "Week 8 Sampling Project Analysis"
 format: pdf
 editor: visual
 ---
@@ -11,7 +11,7 @@ $$
 
 ```{r}
 ## Proportionate allocation n_opt and 
-n_opt <- 86.95652 
+n_opt <- 96.15385  
 
 # Given data from week 5
 regions <- c(1:9)
