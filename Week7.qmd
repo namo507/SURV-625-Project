@@ -142,7 +142,6 @@ precision_age <- sqrt(varcluster_age)
 cat("Precision for Smoked:", precision_smoked, "\n")
 cat("Precision for Marijuana:", precision_marijuana, "\n")
 cat("Precision for Age:", precision_age, "\n")
-
 ```
 
 
