@@ -4,13 +4,18 @@ format: pdf
 editor: visual
 ---
 
-## Sampling fraction accross Stata 
+## Sampling fraction accross Stata
+
 $$
 f_h = n_h/N_h
 $$
 
+$$
+n * MOS/\sum MOS
+$$
+
 ```{r}
-## Proportionate allocation n_opt and 
+## Proportionate allocation n_opt  
 n_opt <- 96.15385  
 
 # Given data from week 5
@@ -23,7 +28,7 @@ proportions <- c(0.0035, 0.0066, 0.0097, 0.0058, 0.0177, 0.0375, 0.2137, 0.2150,
 allocated_clusters <- ceiling((n_opt * proportions))
 
 # Compute first-stage sampling fractions
-sampling_fraction <- 96*44/allocated_clusters
+sampling_fraction <- (allocated_clusters*total_students)/num_schools
 
 # Create data frame with everything
 region_data <- data.frame(
@@ -41,62 +46,72 @@ for (i in 1:length(regions)) {
   cat("Region", regions[i], "first-stage sampling fraction:", round(sampling_fraction[i], 4), "\n")
   cat("\n")
 }
+
+
 ```
+
 $$
-\sum MOS_hi/n_h
-$$
+\sum MOS_hi/n_h 
+$$ 
+
 ## PPeS zone size
+
 ```{r}
-# Order the data frame by Total_Students (ascending)
-ordered_region_data <- region_data[order(region_data$Total_Students), ]
+MI_school_frame_head_counts <- read_excel("~/Desktop/U of M 24-26/Winter 2025/SURVMETH 625 Applied Sampling/Sampling Project /MI_school_frame_head_counts.xls")
+head(MI_school_frame_head_counts)
+```
 
-# Create the summary row with column totals
-summary_row <- data.frame(
-  Region = "Total",
-  Total_Students = sum(ordered_region_data$Total_Students),
-  Num_Schools = sum(ordered_region_data$Num_Schools),
-  Proportion = sum(ordered_region_data$Proportion),
-  Allocated_Clusters = sum(ordered_region_data$Allocated_Clusters),
-  Sampling_Fraction = sum(ordered_region_data$Sampling_Fraction)
-)
 
-# Bind the summary row to the original (ordered) data frame
-ordered_region_data_with_total <- rbind(ordered_region_data, summary_row)
+```{r}
+# Arrange by region and then tot_all (ascending)
+ordered_by_tot_all <- MI_school_frame_head_counts %>%
+  arrange(Region, tot_all)
 
-# Print the final data frame with the totals row
-print(ordered_region_data_with_total)
+# View the ordered dataset
+head(ordered_by_tot_all)
 
-# Zone size 
-sum_MOS <- 797721
-Zone_size <- sum_MOS/ordered_region_data_with_total$Allocated_Clusters ## is this correct I am unsure about the denominator, I am unsure if it is this or number of schools 
+# Function to calculate MOS, region count, and MOS/Region Count
+compute_MOS_and_region_count <- function(data) {
+  data %>%
+    group_by(Region) %>%
+    summarise(
+      MOS = sum(tot_all),          # Sum of tot_all for each region
+      region_count = n(),          # Count of rows for each region
+      Zone_size = MOS / region_count   # MOS divided by region count
+    )
+}
 
+# Apply the function
+result <- compute_MOS_and_region_count(ordered_by_tot_all)
+
+# View the result
+print(result)
 
 ```
 
-## Systemmatic selection 
+## Systemmatic selection
+
 $$
 9 * MOS / \sum MOS
 $$
+
 ```{r}
 set.seed(123456) 
-random_start <- round(runif(9, min = 0, max = Zone_size))
+random_start <- runif(9, min = 0, max = result$Zone_size)
 print(random_start)
 
-# Remove the last two digits (floor divide by 100)
-random_starts_trimmed <- floor(random_start / 100)
+head(ordered_by_tot_all)
 
-# Print the result
-print(random_starts_trimmed)
 
-first_stage_region1 <- ((1*31140)/sum_MOS) 
-first_stage_region2 <- ((1*14692)/sum_MOS)
-first_stage_region3 <- ((1*8044)/sum_MOS)
-first_stage_region4 <- ((1*4855)/sum_MOS)
-first_stage_region5 <- ((2*2893)/sum_MOS)
-first_stage_region6 <- ((4*2893)/sum_MOS)
-first_stage_region7 <- ((21*2893)/sum_MOS)
-first_stage_region8 <- ((21*2893)/sum_MOS)
-first_stage_region9 <- ((44*2893)/sum_MOS)
+first_stage_region1 <- ((180.8125*37)/result$MOS[1]) 
+first_stage_region2 <- ((182.4667*154)/result$MOS[2])
+first_stage_region3 <- ((268.1333*177)/result$MOS[3])
+first_stage_region4 <- ((156.6129*152)/result$MOS[4])
+first_stage_region5 <- ((425.8551*210)/result$MOS[5])
+first_stage_region6 <- ((1012.6829*249)/result$MOS[6])
+first_stage_region7 <- ((6230.5033*268)/result$MOS[7])
+first_stage_region8 <- ((7248.3308*303)/result$MOS[8])
+first_stage_region9 <- ((17864.8104*80)/result$MOS[9])
 
 # Output the values
 cat("First-stage sampling fraction for Region 1:", first_stage_region1, "\n")
@@ -109,7 +124,6 @@ cat("First-stage sampling fraction for Region 7:", first_stage_region7, "\n")
 cat("First-stage sampling fraction for Region 8:", first_stage_region8, "\n")
 cat("First-stage sampling fraction for Region 9:", first_stage_region9, "\n")
 ```
-
 ## Paired selection
 ```{r}
 # Define the region numbers you want to include, in order
@@ -142,3 +156,10 @@ pseudo_strata <- split(pseudo_strata_sorted_df$Region, ceiling(seq_along(pseudo_
 pseudo_strata
 
 ```
+
+```{r}
+f * sum(REG4$tot_all)/ n 
+```
+
+
+
