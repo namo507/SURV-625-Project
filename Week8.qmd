@@ -88,15 +88,15 @@ random_starts_trimmed <- floor(random_start / 100)
 # Print the result
 print(random_starts_trimmed)
 
-first_stage_region1 <- ((9*31140)/sum_MOS) ## I believe this is correct 
-first_stage_region2 <- ((9*14692)/sum_MOS)
-first_stage_region3 <- ((9*8044)/sum_MOS)
-first_stage_region4 <- ((9*4855)/sum_MOS)
-first_stage_region5 <- ((9*2893)/sum_MOS)
-first_stage_region6 <- ((9*2893)/sum_MOS)
-first_stage_region7 <- ((9*2893)/sum_MOS)
-first_stage_region8 <- ((9*2893)/sum_MOS)
-first_stage_region9 <- ((9*2893)/sum_MOS)
+first_stage_region1 <- ((1*31140)/sum_MOS) 
+first_stage_region2 <- ((1*14692)/sum_MOS)
+first_stage_region3 <- ((1*8044)/sum_MOS)
+first_stage_region4 <- ((1*4855)/sum_MOS)
+first_stage_region5 <- ((2*2893)/sum_MOS)
+first_stage_region6 <- ((4*2893)/sum_MOS)
+first_stage_region7 <- ((21*2893)/sum_MOS)
+first_stage_region8 <- ((21*2893)/sum_MOS)
+first_stage_region9 <- ((44*2893)/sum_MOS)
 
 # Output the values
 cat("First-stage sampling fraction for Region 1:", first_stage_region1, "\n")
