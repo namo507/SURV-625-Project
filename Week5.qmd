@@ -62,6 +62,6 @@ region_totals %>%
     col.names = c("Region", "Total Students", "Number of Schools", 
                   "Proportionate Allocation", "Sample Size (n=1000)"),
     digits = c(0, 0, 0, 4, 0),
-    caption = "Example Allocation with n=1000"
+    caption = "Example Allocation with n=4231"
   )
 ```
