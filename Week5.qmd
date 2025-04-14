@@ -53,7 +53,7 @@ knitr::kable(
 
 ```{r}
 # Example with hypothetical sample size
-example_n <- 1000
+example_n <- 4231
 region_totals %>%
   mutate(
     sample_size = round(prop_allocation * example_n)
