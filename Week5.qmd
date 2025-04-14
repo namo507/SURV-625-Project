@@ -53,15 +53,15 @@ knitr::kable(
 
 ```{r}
 # Example with hypothetical sample size
-example_n <- 4231
+example_n <- 4224
 region_totals %>%
   mutate(
     sample_size = round(prop_allocation * example_n)
   ) %>%
   knitr::kable(
     col.names = c("Region", "Total Students", "Number of Schools", 
-                  "Proportionate Allocation", "Sample Size (n=4231)"),
+                  "Proportionate Allocation", "Sample Size (n=4224)"),
     digits = c(0, 0, 0, 4, 0),
-    caption = "Example Allocation with n=4231"
+    caption = "Example Allocation with n=4224"
   )
 ```
