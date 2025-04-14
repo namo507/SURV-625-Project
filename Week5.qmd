@@ -60,7 +60,7 @@ region_totals %>%
   ) %>%
   knitr::kable(
     col.names = c("Region", "Total Students", "Number of Schools", 
-                  "Proportionate Allocation", "Sample Size (n=1000)"),
+                  "Proportionate Allocation", "Sample Size (n=4231)"),
     digits = c(0, 0, 0, 4, 0),
     caption = "Example Allocation with n=4231"
   )
