@@ -53,6 +53,60 @@ knitr::kable(roh_results,
              caption = "Synthetic roh Values by Variable")
 ```
 
+## Optimal Design Calculations
+We'll use the calculated roh values to determine the optimal cluster size and number of clusters given our budget constraints.
+
+```{r}
+library(tidyverse)
+
+# We'll use the largest roh (Ever Smoked) to be conservative
+roh_max <- max(roh_smoked, roh_marijuana, roh_age)
+
+# Function to calculate optimal cluster size given roh and cost parameters
+# Formula: n_opt = sqrt((cost_per_cluster)/(cost_per_student * roh))
+calculate_optimal_cluster_size <- function(cost_cluster, cost_student, roh) {
+  n_opt <- sqrt(cost_cluster / (cost_student * roh))
+  return(n_opt)
+}
+
+# Calculate optimal cluster size
+n_opt <- calculate_optimal_cluster_size(cost_per_cluster, cost_per_student, roh_max)
+n_opt_rounded <- round(n_opt)
+
+# Calculate how many clusters we can afford
+# total_budget = (cost_per_cluster + cost_per_student * n_opt) * m_opt
+# Solve for m_opt
+m_opt <- total_budget / (cost_per_cluster + cost_per_student * n_opt_rounded)
+m_opt_rounded <- floor(m_opt) # We round down to stay within budget
+
+# Calculate total sample size
+total_sample <- n_opt_rounded * m_opt_rounded
+
+optimal_design <- data.frame(
+  Parameter = c("Optimal Cluster Size (n_opt)", 
+                "Rounded Cluster Size",
+                "Optimal Number of Clusters (m_opt)",
+                "Rounded Number of Clusters",
+                "Total Sample Size",
+                "Total Cost",
+                "Average roh",
+                "Expected Design Effect"),
+  Value = c(n_opt,
+            n_opt_rounded,
+            m_opt,
+            m_opt_rounded,
+            total_sample,
+            (cost_per_cluster + cost_per_student * n_opt_rounded) * m_opt_rounded,
+            mean(c(roh_smoked, roh_marijuana, roh_age)),
+            1 + (n_opt_rounded - 1) * roh_max)
+)
+
+knitr::kable(optimal_design, 
+             col.names = c("Parameter", "Value"),
+             digits = c(0, 2),
+             caption = "Optimal Design Parameters")
+```
+
 ## Cost Analysis
 
 Calculating maximum possible number of clusters and students given budget constraints:
@@ -86,20 +140,26 @@ cat("Maximum possible students (if only students):", max_samples$max_students, "
 
 ## Summary Table
 
-```{r summary}
+```{r}
 summary_df <- data.frame(
   Parameter = c("Average Cluster Size (b-bar)", 
                 "Total Budget",
                 "Cost per Cluster",
                 "Cost per Student",
                 "Maximum Possible Clusters",
-                "Maximum Possible Students"),
+                "Maximum Possible Students",
+                "Optimal Cluster Size",
+                "Optimal Number of Clusters",
+                "Total Sample Size"),
   Value = c(b_bar,
             total_budget,
             cost_per_cluster,
             cost_per_student,
             max_samples$max_clusters,
-            max_samples$max_students)
+            max_samples$max_students,
+            n_opt_rounded,
+            m_opt_rounded,
+            total_sample)
 )
 
 knitr::kable(summary_df, 
