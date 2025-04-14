@@ -23,7 +23,7 @@ proportions <- c(0.0035, 0.0066, 0.0097, 0.0058, 0.0177, 0.0375, 0.2137, 0.2150,
 allocated_clusters <- ceiling((n_opt * proportions))
 
 # Compute first-stage sampling fractions
-sampling_fraction <- allocated_clusters / num_schools
+sampling_fraction <- 96*44/allocated_clusters
 
 # Create data frame with everything
 region_data <- data.frame(
