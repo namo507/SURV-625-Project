@@ -61,7 +61,7 @@ $\boxed{f_{2nd} = \frac{m^*_7}{242}}$
 # Given parameters
 mos_school <- 242  # Measure of size for this school from frame
 actual_school_size <- 219  # Actual number of students from roster
-m_star_h <- 9337.95  # Sampling interval for Region 7 
+m_star_h <- 43  # Sampling interval for Region 7 
 
 # Calculate the sampling rate to maintain EPSEM
 sampling_rate <- m_star_h / mos_school
