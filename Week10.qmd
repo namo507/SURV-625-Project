@@ -21,13 +21,12 @@ m_opt <- 44
 N <- 830138
 proportions<- c(0.0035, 0.0066, 0.0097, 0.0058, 0.0177, 0.0375, 0.2137, 0.2150, 0.4514)
 sampling_fractions <- c(0.3043478, 0.5739130, 0.8434782, 0.5043478, 1.5391304, 3.2608695, 18.5826083, 18.6956518, 39.2521731)
-# Compute allocated clusters
 allocated_clusters <- ceiling((n_opt * proportions))
 
-regions <- c(1:9)
-total_students <- c(2893, 5474, 8044, 4855, 14692, 31140, 177421, 178447, 374755)
-num_schools <- c(16, 30, 30, 31, 69, 123, 598, 517, 923)
-proportions <- c(0.0035, 0.0066, 0.0097, 0.0058, 0.0177, 0.0375, 0.2137, 0.2150, 0.4514)
+final_sample <- read_csv("final_sample.csv")
+
+total_students <- aggregate(tot_all ~ Region, data = final_sample, sum)
+
 f <- 0.005
 
 required_subsample_sizes <- ceiling(total_students*f/allocated_clusters)
@@ -59,10 +58,10 @@ library(readxl)
 library(dplyr)
 
 # Step 1: Load the school data
-school_data <- read_excel("MI_school_frame_head_counts.xls")
+school_data <- read_csv("final_sample.csv")
 
 # Required subsample sizes from Task #1
-required_subsample_sizes <- c(15, 28, 41, 25, 37, 39, 43, 43, 43)
+required_subsample_sizes <- c(1, 1, 1, 1, 2, 3, 3, 2, 7)
 
 # Step 2: Loop through each region for Task 2
 for (region in unique(school_data$Region)) {
@@ -144,9 +143,20 @@ for (region in unique(school_data$Region)) {
 ```{r}
 # Step 1: Define the data
 regions <- c(1:9)
-total_students <- c(2893, 5474, 8044, 4855, 14692, 31140, 177421, 178447, 374755)  # N_h
-allocated_clusters <- c(1, 1, 1, 1, 1, 1, 1, 1, 1)  # Number of schools sampled per region
-required_subsample_sizes <- c(15, 28, 41, 25, 37, 39, 43, 43, 43)  # m_hi
+
+compute_MOS_and_region_count <- function(school_data) {
+  school_data %>%
+    group_by(Region) %>%
+    summarise(
+      MOS = sum(tot_all) 
+    )
+}
+result <- compute_MOS_and_region_count(ordered_by_tot_all)
+print(result)
+
+total_students <- result$MOS  # N_h
+allocated_clusters <- c(1, 1, 1, 1, 2, 4, 21, 21, 44)  # Number of schools sampled per region
+required_subsample_sizes <- c(1, 1, 1, 1, 2, 3, 3, 2, 7)  # m_hi
 
 # Step 2: Compute first-stage probability (π_h^(1))
 mos <- total_students  # Measure of size (MOS) for each region
