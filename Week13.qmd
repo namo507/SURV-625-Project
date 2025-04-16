@@ -1,0 +1,72 @@
+
+
+
+```{r}
+library(survey)
+library(readxl)
+library(dplyr)
+library(stringr)
+
+
+```
+
+
+#Task1
+
+```{r}
+
+library(survey)
+library(readxl)
+library(dplyr)
+library(stringr)
+
+raw_data <- read_excel("sample_school_student_list.xls", col_names = FALSE)
+
+stratum_info <- data.frame(
+  Stratum_Code = c("7", "8"),
+  Description = c("Grade 7", "Grade 8"),
+  Population_Size = c(93, 126),
+  Sample_Size = c(17, 22),
+  SECUs_per_stratum = c(1, 1)  #every grade only have one SECU
+)
+
+# sample size for each SECU
+stratum_info$Sample_Size_per_SECU <- stratum_info$Sample_Size / stratum_info$SECUs_per_stratum
+
+print(stratum_info)
+
+```
+
+
+
+
+#Task2
+```{r}
+#Sampling Error Computation Units (SECUs)
+stratum_info <- data.frame(
+  Stratum_Code = c("7", "8"),
+  Description = c("Grade 7", "Grade 8"),
+  Population_Size = c(93, 126),
+  Sample_Size = c(17, 22),
+  SECUs_per_stratum = c(1, 1)
+)
+
+stratum_info$Sample_Size_per_SECU <- stratum_info$Sample_Size / stratum_info$SECUs_per_stratum
+print(stratum_info$SECUs_per_stratum)
+
+
+#df
+
+total_SECUs <- sum(stratum_info$SECUs_per_stratum)
+df <- total_SECUs - nrow(stratum_info)
+cat("Degrees of Freedom (df):", df, "\n")
+
+
+
+#weighted
+stratum_info$Weight <- stratum_info$Population_Size / stratum_info$Sample_Size
+print(stratum_info$Weight)
+```
+
+
+
