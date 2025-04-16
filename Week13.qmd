@@ -1,12 +1,10 @@
 
-
-
 ```{r}
 library(survey)
 library(readxl)
 library(dplyr)
 library(stringr)
-
+library(tidyverse)
 
 ```
 
@@ -15,58 +13,42 @@ library(stringr)
 
 ```{r}
 
-library(survey)
-library(readxl)
-library(dplyr)
-library(stringr)
+df <- read_excel("sample_school_student_list.xls", col_names = FALSE)
 
-raw_data <- read_excel("sample_school_student_list.xls", col_names = FALSE)
+#Clean the data frame: extract teacher, grade, and student names
+df_clean <- df %>%
+  rename(col1 = ...1, col2 = ...2, col3 = ...3) %>%
+  fill(col1, .direction = "down") %>%
+  filter(!is.na(col3)) %>%
+  mutate(Teacher = str_remove(col1, "Teacher: "),
+         Grade = col1,
+         Surname = col2,
+         GivenName = col3) %>%
+  filter(!is.na(GivenName)) %>%
+  mutate(Teacher = na_if(Teacher, Grade),
+         Grade = as.integer(Grade)) %>%
+  fill(Teacher, .direction = "down") %>%
+  select(Grade, Teacher, Surname, GivenName)
 
-stratum_info <- data.frame(
-  Stratum_Code = c("7", "8"),
-  Description = c("Grade 7", "Grade 8"),
-  Population_Size = c(93, 126),
-  Sample_Size = c(17, 22),
-  SECUs_per_stratum = c(1, 1)  #every grade only have one SECU
-)
+#Check the number of students under each teacher
+df_counts <- df_clean %>%
+  group_by(Teacher) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n))
 
-# sample size for each SECU
-stratum_info$Sample_Size_per_SECU <- stratum_info$Sample_Size / stratum_info$SECUs_per_stratum
+print(df_counts)
 
-print(stratum_info)
+#Split each teacher’s students into two sampling error computation units (SECUs)
+set.seed(123)
+df_clean <- df_clean %>%
+  group_by(Teacher) %>%
+  mutate(SECU = sample(rep(1:9, length.out = n()))) %>%
+  ungroup()
 
+# Check sample size of each SECU
+secus <- df_clean %>%
+  group_by(Teacher, SECU) %>%
+  summarise(sample_size = n())
+
+print(secus)
 ```
-
-
-
-
-#Task2
-```{r}
-#Sampling Error Computation Units (SECUs)
-stratum_info <- data.frame(
-  Stratum_Code = c("7", "8"),
-  Description = c("Grade 7", "Grade 8"),
-  Population_Size = c(93, 126),
-  Sample_Size = c(17, 22),
-  SECUs_per_stratum = c(1, 1)
-)
-
-stratum_info$Sample_Size_per_SECU <- stratum_info$Sample_Size / stratum_info$SECUs_per_stratum
-print(stratum_info$SECUs_per_stratum)
-
-
-#df
-
-total_SECUs <- sum(stratum_info$SECUs_per_stratum)
-df <- total_SECUs - nrow(stratum_info)
-cat("Degrees of Freedom (df):", df, "\n")
-
-
-
-#weighted
-stratum_info$Weight <- stratum_info$Population_Size / stratum_info$Sample_Size
-print(stratum_info$Weight)
-```
-
-
-
