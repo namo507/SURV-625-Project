@@ -3,6 +3,13 @@ title: "Week 8 Sampling Project Analysis"
 format: pdf
 editor: visual
 ---
+```{r}
+library(gridExtra)
+library(grid)
+library(ggplot2)
+library(jsonlite)
+library(sampling)
+```
 
 ## Sampling fraction accross Stata
 
@@ -16,7 +23,7 @@ $$
 
 ```{r}
 ## Proportionate allocation n_opt  
-n_opt <- 96.15385  
+n_opt <- 96 
 
 # Given data from week 5
 regions <- c(1:9)
@@ -28,7 +35,7 @@ proportions <- c(0.0035, 0.0066, 0.0097, 0.0058, 0.0177, 0.0375, 0.2137, 0.2150,
 allocated_clusters <- ceiling((n_opt * proportions))
 
 # Compute first-stage sampling fractions
-sampling_fraction <- (allocated_clusters*total_students)/num_schools
+sampling_fraction <- (allocated_clusters*total_students)/sum(total_students)
 
 # Create data frame with everything
 region_data <- data.frame(
@@ -47,6 +54,8 @@ for (i in 1:length(regions)) {
   cat("\n")
 }
 
+
+write_json(region_data, "region_data.json")
 
 ```
 
@@ -97,21 +106,62 @@ $$
 
 ```{r}
 set.seed(123456) 
-random_start <- runif(9, min = 0, max = result$Zone_size)
+random_start <- as.integer(runif(9, min = 0, max = result$Zone_size))
 print(random_start)
 
 head(ordered_by_tot_all)
 
+selected_schools_by_region <- list()
 
-first_stage_region1 <- ((180.8125*37)/result$MOS[1]) 
-first_stage_region2 <- ((182.4667*154)/result$MOS[2])
-first_stage_region3 <- ((268.1333*177)/result$MOS[3])
-first_stage_region4 <- ((156.6129*152)/result$MOS[4])
-first_stage_region5 <- ((425.8551*210)/result$MOS[5])
-first_stage_region6 <- ((1012.6829*249)/result$MOS[6])
-first_stage_region7 <- ((6230.5033*268)/result$MOS[7])
-first_stage_region8 <- ((7248.3308*303)/result$MOS[8])
-first_stage_region9 <- ((17864.8104*80)/result$MOS[9])
+for (region in 1:9) {
+  
+  # Filter for this region
+  region_data <- ordered_by_tot_all[ordered_by_tot_all$Region == region, ]
+  
+  # Number of schools to select in this region
+  n_selected <- allocated_clusters[region]
+  
+  # Original k (zone size)
+  k <- result$Zone_size[region]
+  
+  # Random start
+  start <- random_start[region]
+  
+  # Max tot_all for this region
+  max_tot_all <- max(region_data$tot_all)
+  
+  # Keep adjusting k by removing the last digit until it's small enough
+  while ((start + (n_selected - 1) * k) > max_tot_all && k >= 10) {
+    k <- as.numeric(substr(as.character(floor(k)), 1, nchar(floor(k)) - 1))
+  }
+  
+  # Sampling points
+  selection_points <- start + (0:(n_selected - 1)) * k
+
+  # Select rows: first where tot_all >= selection point
+  selected_rows <- sapply(selection_points, function(point) {
+    which(region_data$tot_all >= point)[1]
+  })
+
+  # Store results (including duplicates/NA)
+  selected_schools_by_region[[region]] <- region_data[selected_rows, ]
+}
+
+# Combine into final dataset
+final_sample <- do.call(rbind, selected_schools_by_region)
+
+```
+
+```{r}
+first_stage_region1 <- ((1*154)/result$MOS[1]) 
+first_stage_region2 <- ((1*154)/result$MOS[2])
+first_stage_region3 <- ((1*121)/result$MOS[3])
+first_stage_region4 <- ((1*57)/result$MOS[4])
+first_stage_region5 <- ((2*88)/result$MOS[5])
+first_stage_region6 <- ((4*51)/result$MOS[6])
+first_stage_region7 <- ((21*161)/result$MOS[7])
+first_stage_region8 <- ((21*33)/result$MOS[8])
+first_stage_region9 <- ((44*401)/result$MOS[9])
 
 # Output the values
 cat("First-stage sampling fraction for Region 1:", first_stage_region1, "\n")
@@ -123,42 +173,6 @@ cat("First-stage sampling fraction for Region 6:", first_stage_region6, "\n")
 cat("First-stage sampling fraction for Region 7:", first_stage_region7, "\n")
 cat("First-stage sampling fraction for Region 8:", first_stage_region8, "\n")
 cat("First-stage sampling fraction for Region 9:", first_stage_region9, "\n")
-```
-## Paired selection
-```{r}
-# Define the region numbers you want to include, in order
-selected_regions <- c(6, 5, 3, 4, 1, 1, 1, 1, 1)
-
-# Extract the corresponding rows from ordered_region_data_with_total
-selected_rows_df <- ordered_region_data_with_total[
-  ordered_region_data_with_total$Region %in% selected_regions & 
-  ordered_region_data_with_total$Region != "Total",  # Exclude "Total" row
-]
-
-# Ensure the rows appear in the same order as the selected_regions vector
-selected_rows_df <- do.call(rbind, lapply(selected_regions, function(r) {
-  selected_rows_df[selected_rows_df$Region == r, ]
-}))
-
-# Print the resulting data frame
-print(selected_rows_df)
-
-```
-
-```{r}
-# Sort by Num_Schools to simulate the process of pairing based on size
-pseudo_strata_sorted_df <- selected_rows_df[order(selected_rows_df$Num_Schools), ]
-
-# Create pseudo-strata by pairing consecutive rows
-pseudo_strata <- split(pseudo_strata_sorted_df$Region, ceiling(seq_along(pseudo_strata_sorted_df$Region) / 2))
-
-# Show the pseudo-strata (pairs of regions)
-pseudo_strata
-
-```
-
-```{r}
-f * sum(REG4$tot_all)/ n 
 ```
 
 
