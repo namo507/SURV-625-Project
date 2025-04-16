@@ -6,37 +6,21 @@ editor: visual
 
 # Week 10- Tasks
 
-1. Given your overall $m_{opt}, n_{opt}$ and N (based on the sampling frame), you’ve already
-computed the overall sampling fraction, 𝑓. For each of the nine strata, compute the
-required number of students to subsample from each sampled school based on the
-stratified PPeS design **in order to maintain epsem across all strata.**
+1.  Given your overall $m_{opt}, n_{opt}$ and N (based on the sampling frame), you’ve already computed the overall sampling fraction, 𝑓. For each of the nine strata, compute the required number of students to subsample from each sampled school based on the stratified PPeS design **in order to maintain epsem across all strata.**
 
-2. Do each of the schools that you sampled in a given region have the minimum sufficient
-size, given the stratum-specific subsample sizes computed in Task #1? Do subsequent
-schools on the list have the minimum sufficient size? If not, what will you do?
+2.  Do each of the schools that you sampled in a given region have the minimum sufficient size, given the stratum-specific subsample sizes computed in Task #1? Do subsequent schools on the list have the minimum sufficient size? If not, what will you do?
 
-3. Begin to describe how you will physically select the subsample of students within a given
-sampled school (or set of linked schools). What will your second-stage sampling rate be for a
-given school within a given stratum? How will you acquire the updated rosters from each
-school? What technique will you use to select the sample at the specified second-stage
-rate?
+3.  Begin to describe how you will physically select the subsample of students within a given sampled school (or set of linked schools). What will your second-stage sampling rate be for a given school within a given stratum? How will you acquire the updated rosters from each school? What technique will you use to select the sample at the specified second-stage rate?
 
-4. Write down the overall sampling fraction based on the stratified PPeS design, indicating
-the overall probability of inclusion for a given student, from a given school (or linked set of
-schools), in a given stratum. Be careful with notation. Keep in mind that the MOS values
-used for the sampled schools at the first stage and the denominator at the second stage (Did
-you sample a single school? Or a linked set of schools?) will depend on your response to Task
-#2 above.
+4.  Write down the overall sampling fraction based on the stratified PPeS design, indicating the overall probability of inclusion for a given student, from a given school (or linked set of schools), in a given stratum. Be careful with notation. Keep in mind that the MOS values used for the sampled schools at the first stage and the denominator at the second stage (Did you sample a single school? Or a linked set of schools?) will depend on your response to Task #2 above.
 
 ```{r}
 library(knitr)
-n_opt <- 96.95652
+n_opt <- 96
 m_opt <- 44
 N <- 830138
+proportions<- c(0.0035, 0.0066, 0.0097, 0.0058, 0.0177, 0.0375, 0.2137, 0.2150, 0.4514)
 sampling_fractions <- c(0.3043478, 0.5739130, 0.8434782, 0.5043478, 1.5391304, 3.2608695, 18.5826083, 18.6956518, 39.2521731)
-f <- n_opt / N
-required_subsample_sizes <- sampling_fractions * f * m_opt
-
 # Compute allocated clusters
 allocated_clusters <- ceiling((n_opt * proportions))
 
@@ -44,6 +28,9 @@ regions <- c(1:9)
 total_students <- c(2893, 5474, 8044, 4855, 14692, 31140, 177421, 178447, 374755)
 num_schools <- c(16, 30, 30, 31, 69, 123, 598, 517, 923)
 proportions <- c(0.0035, 0.0066, 0.0097, 0.0058, 0.0177, 0.0375, 0.2137, 0.2150, 0.4514)
+f <- 0.005
+
+required_subsample_sizes <- ceiling(total_students*f/allocated_clusters)
 
 region_data <- data.frame(
   Region = regions,
@@ -55,4 +42,136 @@ region_data <- data.frame(
   Required_Subsample = required_subsample_sizes
 )
 kable(region_data)
+```
+
+```{r}
+m_star <- n_opt/sum(allocated_clusters)
+print(m_star)
+nh <- total_students * f
+m_star_regions <- nh/ allocated_clusters
+print(ceiling(m_star_regions))
+```
+
+# Task 2 & 3
+
+```{r}
+library(readxl)
+library(dplyr)
+
+# Step 1: Load the school data
+school_data <- read_excel("MI_school_frame_head_counts.xls")
+
+# Required subsample sizes from Task #1
+required_subsample_sizes <- c(15, 28, 41, 25, 37, 39, 43, 43, 43)
+
+# Step 2: Loop through each region for Task 2
+for (region in unique(school_data$Region)) {
+  # Filter schools in the current region
+  schools_in_region <- school_data[school_data$Region == region, ]
+  
+  # Get the required subsample size for the region
+  required_size <- required_subsample_sizes[region]
+  
+  # Identify failing schools
+  failing_schools <- schools_in_region[schools_in_region$tot_all < required_size, ]
+  if (nrow(failing_schools) > 0) {
+    cat("Some schools in Region", region, "do not meet the required subsample size.\n")
+    
+    # Combine failing schools
+    combined_size <- sum(failing_schools$tot_all)
+    combined_school <- failing_schools[1, ]  # Use the first failing school as a template
+    combined_school$BNAME <- "Combined Failing Schools"
+    combined_school$tot_all <- combined_size
+    
+    # Remove failing schools and add the combined unit
+    schools_in_region <- schools_in_region[schools_in_region$tot_all >= required_size, ]
+    schools_in_region <- rbind(schools_in_region, combined_school)
+  }
+  
+  # Calculate second-stage sampling rate for each school
+  schools_in_region <- schools_in_region %>%
+    mutate(Second_Stage_Rate = required_size / tot_all)
+  
+  # Print the second-stage sampling rate
+  cat("Region:", region, "\n")
+  print(schools_in_region[, c("BNAME", "tot_all", "Second_Stage_Rate")])
+  
+  # Save the updated schools_in_region for Task 3
+  assign(paste0("region_", region, "_data"), schools_in_region)
+}
+
+# Task 3: Perform systematic sampling for each school
+for (region in unique(school_data$Region)) {
+  # Load the updated schools_in_region from Task 2
+  schools_in_region <- get(paste0("region_", region, "_data"))
+  
+  # Get the required subsample size for the region
+  required_size <- required_subsample_sizes[region]
+  
+  # Perform systematic sampling for each school
+  for (i in 1:nrow(schools_in_region)) {
+    school_name <- schools_in_region$BNAME[i]
+    total_students <- schools_in_region$tot_all[i]
+    m_hi <- required_size  # Required subsample size for the school
+    
+    # Check if the total number of students is sufficient
+    if (total_students < m_hi) {
+      cat("Warning: Total students in school", school_name, "is less than the required subsample size.\n")
+      next
+    }
+    
+    # Generate a mock roster for the school (replace with actual roster data if available)
+    roster <- data.frame(
+      Student_ID = 1:total_students
+    )
+    
+    # Perform systematic sampling
+    k <- floor(total_students / m_hi)  # Sampling interval
+    set.seed(625)  # For reproducibility
+    random_start <- sample(1:k, 1)  # Random start
+    sampled_indices <- seq(random_start, total_students, by = k)
+    sampled_students <- roster[sampled_indices, ]
+    
+    # Print sampled students
+    cat("Sampled students for school:", school_name, "\n")
+    print(sampled_students)
+  }
+}
+```
+
+# Task 4
+
+```{r}
+# Step 1: Define the data
+regions <- c(1:9)
+total_students <- c(2893, 5474, 8044, 4855, 14692, 31140, 177421, 178447, 374755)  # N_h
+allocated_clusters <- c(1, 1, 1, 1, 1, 1, 1, 1, 1)  # Number of schools sampled per region
+required_subsample_sizes <- c(15, 28, 41, 25, 37, 39, 43, 43, 43)  # m_hi
+
+# Step 2: Compute first-stage probability (π_h^(1))
+mos <- total_students  # Measure of size (MOS) for each region
+sum_mos <- sum(mos)  # Total MOS across all regions
+pi_h1 <- mos / sum_mos  # First-stage probability
+
+# Step 3: Compute second-stage probability (π_hi^(2))
+pi_h2 <- required_subsample_sizes / mos  # Second-stage probability
+
+# Step 4: Compute overall probability of inclusion (π_hi)
+pi_hi <- pi_h1 * pi_h2  # Overall probability of inclusion
+
+# Step 5: Compute overall sampling fraction (f_h)
+f_h <- required_subsample_sizes / total_students  # Overall sampling fraction
+
+# Step 6: Create a data frame to display results
+results <- data.frame(
+  Region = regions,
+  Total_Students = total_students,
+  First_Stage_Prob = round(pi_h1, 6),
+  Second_Stage_Prob = round(pi_h2, 6),
+  Overall_Prob = round(pi_hi, 6),
+  Sampling_Fraction = round(f_h, 6)
+)
+
+# Print the results
+print(results)
 ```
