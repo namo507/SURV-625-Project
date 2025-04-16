@@ -56,3 +56,63 @@ design <- svydesign(
 # Now BRR will work because all strata have ≥2 PSUs
 rep_design <- as.svrepdesign(design, type = "BRR")
 ```
+
+
+Running code:
+
+```{r}
+# Check the number of PSUs per stratum
+psu_counts <- df %>%
+  group_by(stratum_combined) %>%
+  summarise(n_districts = n_distinct(SECU)) %>%
+  mutate(is_odd = n_districts %% 2 != 0)  # Check if count is odd
+
+print(psu_counts)
+
+# Option 2: Modify strata with odd PSUs
+# Find the stratum with odd number of PSUs
+odd_strata <- psu_counts %>% filter(is_odd) %>% pull(stratum_combined)
+
+# Create a modified dataset for BRR by duplicating a PSU in each odd stratum
+df_brr <- df
+
+for (strat in odd_strata) {
+  # Find a PSU to duplicate in this stratum
+  psu_to_duplicate <- df_brr %>% 
+    filter(stratum_combined == strat) %>% 
+    slice(1) %>% 
+    pull(SECU)
+  
+  # Find a row with this PSU
+  row_to_duplicate <- df_brr %>%
+    filter(stratum_combined == strat, SECU == psu_to_duplicate) %>%
+    slice(1)
+  
+  # Add suffix to the duplicated PSU to make it distinct
+  row_to_duplicate$SECU <- paste0(row_to_duplicate$SECU, "_dup")
+  
+  # Add the duplicated row
+  df_brr <- bind_rows(df_brr, row_to_duplicate)
+}
+
+# Verify we now have even numbers of PSUs in all strata
+df_brr %>%
+  group_by(stratum_combined) %>%
+  summarise(n_districts = n_distinct(SECU)) %>%
+  mutate(is_odd = n_districts %% 2 != 0)
+
+# Create the survey design with the modified data
+design_brr <- svydesign(
+  id = ~SECU,
+  strata = ~stratum_combined,
+  weights = ~tot_all,
+  data = df_brr,
+  nest = TRUE
+)
+
+# Now BRR should work
+rep_design_brr <- as.svrepdesign(design_brr, type = "BRR")
+
+# Verify the design worked
+summary(rep_design_brr)
+```
