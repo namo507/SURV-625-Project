@@ -1,54 +1,58 @@
-
 ```{r}
 library(survey)
 library(readxl)
 library(dplyr)
 library(stringr)
 library(tidyverse)
-
+library(readr)
 ```
 
 
 #Task1
 
 ```{r}
+df <- read.csv("final_sample.csv")
+# Create stratum variable (Region)
+df$stratum <- df$Region
 
-df <- read_excel("sample_school_student_list.xls", col_names = FALSE)
+# Create SECU variable (District as proxy for PSUs)
+df$SECU <- as.factor(df$District_Name)
 
-#Clean the data frame: extract teacher, grade, and student names
-df_clean <- df %>%
-  rename(col1 = ...1, col2 = ...2, col3 = ...3) %>%
-  fill(col1, .direction = "down") %>%
-  filter(!is.na(col3)) %>%
-  mutate(Teacher = str_remove(col1, "Teacher: "),
-         Grade = col1,
-         Surname = col2,
-         GivenName = col3) %>%
-  filter(!is.na(GivenName)) %>%
-  mutate(Teacher = na_if(Teacher, Grade),
-         Grade = as.integer(Grade)) %>%
-  fill(Teacher, .direction = "down") %>%
-  select(Grade, Teacher, Surname, GivenName)
+secu_counts <- df %>%
+  group_by(stratum) %>%
+  summarise(
+    n_secus = n_distinct(SECU),
+    sample_size = n()
+  )
 
-#Check the number of students under each teacher
-df_counts <- df_clean %>%
-  group_by(Teacher) %>%
-  summarise(n = n()) %>%
-  arrange(desc(n))
+print(secu_counts)
 
-print(df_counts)
 
-#Split each teacher’s students into two sampling error computation units (SECUs)
-set.seed(123)
-df_clean <- df_clean %>%
-  group_by(Teacher) %>%
-  mutate(SECU = sample(rep(1:9, length.out = n()))) %>%
-  ungroup()
+df$SECU <- as.factor(df$District_Name)  # PSUs should be districts, not regions
 
-# Check sample size of each SECU
-secus <- df_clean %>%
-  group_by(Teacher, SECU) %>%
-  summarise(sample_size = n())
+# Combine small strata (Regions 1-4) into a single stratum
+df$stratum_combined <- ifelse(df$Region %in% 1:4, 0, df$Region)
 
-print(secus)
+# Verify we now have ≥2 PSUs per stratum
+df %>% 
+  group_by(stratum_combined) %>% 
+  summarise(n_districts = n_distinct(SECU))
+```
+
+
+
+```{r}
+# Create survey design with combined strata
+df$District_Name[is.na(df$District_Name)] <- "Unknown_District"
+
+# Then proceed with design
+design <- svydesign(
+  id = ~SECU,
+  strata = ~stratum_combined,
+  weights = ~tot_all,
+  data = df,
+  nest = TRUE
+)
+# Now BRR will work because all strata have ≥2 PSUs
+rep_design <- as.svrepdesign(design, type = "BRR")
 ```
