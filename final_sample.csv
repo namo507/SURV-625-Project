@@ -1,0 +1,97 @@
+"BCODE","BNAME","DCODE","District_Name","Region","County_ID","County_Name","Public/nonpublic","g7_totl","g8_totl","g9_totl","g10_totl","g11_totl","g12_totl","tot_all"
+"01175","Ewen-Trout Creek Consolidated School","66045","Ewen-Trout Creek Consolidated School District",1,"66","Ontonagon","Public",30,27,24,19,23,31,154
+"05490","West Iron County Middle School","36025","West Iron County Public Schools",2,"36","Iron","Public",85,69,0,0,0,0,154
+"03243","Mid Peninsula School","21135","Mid Peninsula School District",3,"21","Delta","Public",22,25,19,20,16,19,121
+"08446","Cedarville Middle School","49040","Les Cheneaux Community Schools",4,"49","Mackinac","Public",23,34,0,0,0,0,57
+"05545","WEST SIDE CHRISTIAN SCHOOL","41010",NA,5,"04","Alpena","nonpublic",49,39,0,0,0,0,88
+"03252","Rogers City High School","71080","Rogers City Area Schools",5,"71","Presque Isle","Public",49,32,60,60,65,60,326
+"03568","SPRING VALE ACADEMY","78110",NA,6,"83","Wexford","nonpublic",0,0,7,14,13,17,51
+"02378","Marion High School","67050","Marion Public Schools",6,"67","Osceola","Public",49,48,45,51,46,60,299
+"02339","Manistee High School","51070","Manistee Area Schools",6,"51","Manistee","Public",0,0,146,140,135,148,569
+"04199","West Middle School","28010","Traverse City Area Public Schools",6,"28","Grand Traverse","Public",396,416,2,0,0,0,814
+"04366","Washington Gardner Middle School","13010","Albion Public Schools",7,"13","Calhoun","Public",71,90,0,0,0,0,161
+"06978","CARDINAL MOONEY CATHOLIC SCH","74050",NA,7,"70","Ottawa","nonpublic",0,0,48,47,47,47,189
+"08845","Brandywine Middle School","11210","Brandywine Community Schools",7,"11","Berrien","Public",117,100,0,0,0,0,217
+"01792","Hull Middle School","11010","Benton Harbor Area Schools",7,"11","Berrien","Public",133,116,0,0,0,0,249
+"02677","New Buffalo Senior High School","11200","New Buffalo Area Schools",7,"11","Berrien","Public",0,0,66,76,77,57,276
+"06310","Portland Middle School","34110","Portland Public School District",7,"34","Ionia","Public",156,150,0,0,0,0,306
+"02997","Pennfield Middle School","13120","Pennfield Schools",7,"13","Calhoun","Public",165,171,0,0,0,0,336
+"04499","White Cloud High School","62090","White Cloud Public Schools",7,"62","Newaygo","Public",0,0,130,76,75,83,364
+"04502","White Pigeon Jr/Sr High School","75070","White Pigeon Community Schools",7,"75","St. Joseph","Public",53,82,67,72,53,64,391
+"03562","Sparta Middle School","41240","Sparta Area Schools",7,"41","Kent","Public",201,221,0,0,0,0,422
+"08331","Black River Public School","70904","Black River Public School",7,"70","Ottawa","Public",85,84,89,79,62,50,449
+"00604","Sturgis Middle School","75010","Sturgis Public Schools",7,"75","St. Joseph","Public",223,256,0,0,0,0,479
+"00568","Cedar Springs Middle School","41070","Cedar Springs Public Schools",7,"41","Kent","Public",252,257,0,0,0,0,509
+"00297","Berrien Springs High School","11240","Berrien Springs Public Schools",7,"11","Berrien","Public",0,0,133,142,146,120,541
+"01687","Hillside Middle School","39010","Kalamazoo Public School District",7,"39","Kalamazoo","Public",266,300,0,0,0,0,566
+"00610","Central Montcalm High School","59125","Central Montcalm Public Schools",7,"59","Montcalm","Public",0,0,153,164,121,160,598
+"00408","Bronson Jr/Sr High School","12020","Bronson Community School District",7,"12","Branch","Public",103,101,98,108,99,127,636
+"05815","Mona Shores Middle School","61060","Mona Shores Public School District",7,"61","Muskegon","Public",312,340,0,0,0,0,652
+"02113","Lakewood High School","34090","Lakewood Public Schools",7,"34","Ionia","Public",0,0,159,182,158,183,682
+"01920","Jenison Junior High School","70175","Jenison Public Schools",7,"70","Ottawa","Public",361,349,0,0,0,0,710
+"00766","Comstock Park High School","41080","Comstock Park Public Schools",7,"41","Kent","Public",0,0,170,234,177,162,743
+"08655","Ann Arbor Learning Community","81904","Ann Arbor Learning Community",8,"81","Washtenaw","Public",15,18,0,0,0,0,33
+"01827","IMMANUEL LUTHERAN SCHOOL","50080",NA,8,"38","Jackson","nonpublic",42,25,0,0,0,0,67
+"06542","Roberto Clemente Center","81010","Ann Arbor Public Schools",8,"81","Washtenaw","Public",0,10,15,34,29,13,101
+"02337","Hudson Middle School","46080","Hudson Area Schools",8,"46","Lenawee","Public",69,66,0,0,0,0,135
+"05252","E.F. Rittmueller Middle School","73190","Frankenmuth School District",8,"73","Saginaw","Public",90,79,0,0,0,0,169
+"01543","Hamady Middle School","25210","Westwood Heights Schools",8,"25","Genesee","Public",102,104,0,0,0,0,206
+"03112","Potterville High School","23090","Potterville Public Schools",8,"23","Eaton","Public",0,0,64,59,67,51,241
+"04077","Stockbridge Middle School","33200","Stockbridge Community Schools",8,"33","Ingham","Public",133,132,2,3,1,1,272
+"03472","SHRINE HIGH SCHOOL","63040",NA,8,"33","Ingham","nonpublic",0,0,74,66,71,95,306
+"03061","Pittsford Area High School","30060","Pittsford Area Schools",8,"30","Hillsdale","Public",50,55,53,58,68,56,340
+"02316","Madison High School","46090","Madison School District (Lenawee)",8,"46","Lenawee","Public",0,0,98,88,97,91,374
+"00806","Corunna Middle School","78100","Corunna Public School District",8,"78","Shiawassee","Public",214,194,0,0,0,0,408
+"01271","Forsythe Middle School","81010","Ann Arbor Public Schools",8,"81","Washtenaw","Public",231,212,0,0,0,0,443
+"00649","Charlotte Middle School","23030","Charlotte Public Schools",8,"23","Eaton","Public",264,211,0,0,0,0,475
+"06301","Adrian Middle School 7/8 Building","46010","Adrian City School District",8,"46","Lenawee","Public",226,284,0,0,0,0,510
+"01219","Andrew G. Schmidt Middle School","25100","Fenton Area Public Schools",8,"25","Genesee","Public",279,266,0,0,0,0,545
+"00327","Birch Run High School","73170","Birch Run Area School District",8,"73","Saginaw","Public",0,0,166,144,120,147,577
+"00666","Chesaning Union High School","73110","Chesaning Union Schools",8,"73","Saginaw","Public",0,0,133,178,155,146,612
+"09382","Grand Blanc Middle School East","25030","Grand Blanc Community Schools",8,"25","Genesee","Public",309,340,0,0,0,0,649
+"09892","McKinley Foundation","25010","Flint City School District",8,"25","Genesee","Public",349,339,0,0,0,0,688
+"08715","Pathfinder School","47080","Pinckney Community Schools",8,"47","Livingston","Public",347,381,0,0,0,0,728
+"06773","White Lake Middle School","63220","Huron Valley Schools",9,"63","Oakland","Public",195,206,0,0,0,0,401
+"01979","Julian O. Strong Middle School","82045","Melvindale-North Allen Park Schools",9,"82","Wayne","Public",215,226,0,0,0,0,441
+"06361","Powell Middle School","50190","Romeo Community Schools",9,"50","Macomb","Public",248,233,0,0,0,0,481
+"02205","Lincoln Middle School","50220","Van Dyke Public Schools",9,"50","Macomb","Public",273,249,0,0,0,0,522
+"01807","Ida High School","58070","Ida Public School District",9,"58","Monroe","Public",0,0,149,142,141,129,561
+"08456","Detroit Community Schools-High School","82925","Detroit Community Schools",9,"82","Wayne","Public",0,0,164,176,134,128,602
+"00529","Caro High School","79020","Caro Community Schools",9,"79","Tuscola","Public",0,0,139,156,175,171,641
+"03505","SOUTH CHRISTIAN HIGH SCHOOL","41160",NA,9,"74","St. Clair","nonpublic",0,0,171,166,161,183,681
+"04613","Yale Senior High School","74130","Yale Public Schools",9,"74","St. Clair","Public",0,0,183,198,167,173,721
+"04260","UNITY CHRISTIAN HIGH SCHOOL","70190",NA,9,"82","Wayne","nonpublic",0,0,182,194,172,213,761
+"05957","Richards Middle School","50100","Fraser Public Schools",9,"50","Macomb","Public",391,412,0,0,0,0,803
+"02718","North Branch High School","44090","North Branch Area Schools",9,"44","Lapeer","Public",0,0,226,225,200,191,842
+"01554","Hamtramck High School","82060","Hamtramck Public Schools",9,"82","Wayne","Public",0,0,282,238,200,161,881
+"01666","Highland Park Community H.S.","82070","Highland Park City Schools",9,"82","Wayne","Public",0,0,235,423,106,162,926
+"02592","Monroe Middle School","58010","Monroe Public Schools",9,"58","Monroe","Public",512,470,0,0,0,0,982
+"06172","Novi Middle School","63100","Novi Community School District",9,"63","Oakland","Public",493,520,0,0,0,0,1013
+"06971","Renaissance High School","82010","Detroit City School District",9,"82","Wayne","Public",0,0,315,256,248,224,1043
+"01616","Hazel Park High School","63130","Hazel Park City School District",9,"63","Oakland","Public",0,0,327,279,266,210,1082
+"02756","Pontiac Northern High School","63030","Pontiac City School District",9,"63","Oakland","Public",0,1,309,269,260,311,1150
+"03167","Redford Union High School","82110","Redford Union School District",9,"82","Wayne","Public",0,0,289,295,289,294,1167
+"00065","Allen Park High School","82020","Allen Park Public Schools",9,"82","Wayne","Public",0,0,317,327,271,291,1206
+"03260","Romulus Senior High School","82130","Romulus Community Schools",9,"82","Wayne","Public",0,0,318,357,268,301,1244
+"02855","Osborn High School","82010","Detroit City School District",9,"82","Wayne","Public",0,0,456,407,260,183,1306
+"02437","Oxford High School","63110","Oxford Community Schools",9,"63","Oakland","Public",0,0,369,327,321,305,1322
+"02130","Lapeer West Senior High School","44010","Lapeer Community Schools",9,"44","Lapeer","Public",0,258,303,287,263,274,1385
+"06019","Sterling Heights Senior H.S.","50230","Warren Consolidated Schools",9,"50","Macomb","Public",0,0,363,396,331,329,1419
+"05142","Grosse Pointe North High School","82055","Grosse Pointe Public Schools",9,"82","Wayne","Public",0,0,341,359,358,402,1460
+"01634","Ford High School","82010","Detroit City School District",9,"82","Wayne","Public",0,0,563,412,314,198,1487
+"05419","Southfield-Lathrup High School","63060","Southfield Public School District",9,"63","Oakland","Public",0,0,377,396,408,347,1528
+"04393","Waterford Kettering High School","63300","Waterford School District",9,"63","Oakland","Public",0,0,449,490,292,344,1575
+"01308","Fraser High School","50100","Fraser Public Schools",9,"50","Macomb","Public",0,0,421,371,431,387,1610
+"01512","Grosse Pointe South High School","82055","Grosse Pointe Public Schools",9,"82","Wayne","Public",0,0,405,422,415,399,1641
+"04340","Walled Lake Central High School","63290","Walled Lake Consolidated Schools",9,"63","Oakland","Public",0,0,469,443,375,398,1685
+"02124","L'Anse Creuse High School","50140","L'Anse Creuse Public Schools",9,"50","Macomb","Public",0,0,570,441,389,326,1726
+"03242","Rochester High School","63260","Rochester Community School District",9,"63","Oakland","Public",0,0,462,438,421,447,1768
+"00645","Warren Mott High School","50230","Warren Consolidated Schools",9,"50","Macomb","Public",0,0,481,477,422,429,1809
+"06393","Athens High School","63150","Troy School District",9,"63","Oakland","Public",0,0,466,447,492,454,1859
+"04407","Wayne Memorial High School","82160","Wayne-Westland Community School District",9,"82","Wayne","Public",0,0,716,448,367,366,1897
+"00089","Anchor Bay High School","50040","Anchor Bay School District",9,"50","Macomb","Public",0,0,494,481,502,453,1930
+"05315","Novi High School","63100","Novi Community School District",9,"63","Oakland","Public",0,0,513,512,474,462,1961
+"05770","Salem High School","82100","Plymouth-Canton Community Schools",9,"82","Wayne","Public",0,0,552,521,473,467,2013
+"05959","Eisenhower High School","50210","Utica Community Schools",9,"50","Macomb","Public",0,0,0,691,713,659,2063
+"04848","Churchill High School","82095","Livonia Public Schools",9,"82","Wayne","Public",0,0,518,518,510,545,2091
+"00679","Chippewa Valley High School","50080","Chippewa Valley Schools",9,"50","Macomb","Public",0,0,594,565,501,521,2181
