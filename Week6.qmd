@@ -167,3 +167,23 @@ knitr::kable(summary_df,
              digits = 0,
              caption = "Summary of Key Parameters")
 ```
+
+
+Inferences:
+
+The results highlight how intra-cluster correlation (ICC) directly shapes sampling efficiency. With ICC values ranging from 0.014 (Age First Asked) to 0.031 (Ever Smoked), schools exhibit moderate homogeneity in student behaviors—particularly for smoking. 
+
+This clustering effect amplifies the required sample size, as seen in the design effect of 2.32, meaning nearly twice as many students are needed compared to a simple random sample.
+
+Balancing cost and precision, the optimal design selects 96 schools with 44 students each (totaling 4,224 students). This strikes a middle ground between two extremes i.e. surveying 166 schools (maximizing geographic spread but undersampling students) or 10,000 students (ignoring school-level costs entirely). Not only that but the choice reflects real-world constraints like school recruitment expenses ($2,500 per school) and per-student data collection costs ($100), while prioritizing statistical power.
+
+Now the reason this works is:
+
+* Higher ICCs (e.g., smoking behavior) demand more clusters to capture between-school variability.
+* The 44-student cluster size minimizes variance inflation from within-school similarities.
+* Budget allocation mirrors practices in education research, where fixed cluster costs often dominate.
+
+Practical considerations:
+* Non-response adjustments helps in building a 10-15% buffer to ensure final samples meet power requirements.
+* Parameter justification shows that benchmarking against prior studies (e.g., similar school-based smoking surveys) strengthens methodological credibility.
+* Cost transparency helps in explicitly separating cluster/student costs helps stakeholders understand tradeoffs.
