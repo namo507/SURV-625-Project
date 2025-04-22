@@ -185,3 +185,6 @@ results <- data.frame(
 # Print the results
 print(results)
 ```
+
+inference:
+
