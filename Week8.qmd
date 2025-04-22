@@ -66,7 +66,7 @@ $$
 ## PPeS zone size
 
 ```{r}
-MI_school_frame_head_counts <- read_excel("~/Desktop/U of M 24-26/Winter 2025/SURVMETH 625 Applied Sampling/Sampling Project /MI_school_frame_head_counts.xls")
+MI_school_frame_head_counts <- read_excel("MI_school_frame_head_counts.xls")
 head(MI_school_frame_head_counts)
 ```
 
@@ -175,5 +175,28 @@ cat("First-stage sampling fraction for Region 8:", first_stage_region8, "\n")
 cat("First-stage sampling fraction for Region 9:", first_stage_region9, "\n")
 ```
 
+
+Inferences:
+
+
+So for this statewide education study, we aimed to balance efficiency and fairness by dividing Michigan into nine geographic regions (like puzzle pieces) and treating each as its own unique "stratum." Regions with more students—like Region 9, which had nearly half the state’s student population—naturally got more schools in the sample. This proportional allocation ensured heavily populated areas weren’t overlooked, while smaller regions still had a voice.
+
+Next, we calculated the average school size for each region by tallying all students and dividing by the number of schools—a way to gauge whether a region had lots of small schools or a few large ones. Then came the clever part: systematically selecting schools. We lined up schools in each region by size (smallest to largest) and used a random starting point to pick schools at evenly spaced intervals. Think of it like spacing out survey participants at a concert—bigger schools (the loudest voices) got picked more often, while smaller ones still had a chance.
+
+Finally, we checked the math i.e. for each region, we calculated what percentage of its students would end up in the sample based on how many schools we selected and their average size. This "sampling fraction" acted like a reality check, confirming that our design didn’t accidentally over- or under-represent any area.
+
+The results were as follows:
+
+Region 1: 4.32%
+Region 2: 2.81%
+Region 3: 1.40%
+Region 4: 1.17%
+Region 5: 0.93%
+Region 6: 0.62%
+Region 7: 1.76%
+Region 8: 0.37%
+Region 9: 4.71%
+
+So, by blending stratification, proportional allocation, and size-aware sampling, this method ensured the study was both statistically robust and practical—like tailoring a suit to fit Michigan’s educational landscape perfectly.
 
 
