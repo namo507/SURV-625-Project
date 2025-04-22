@@ -209,3 +209,51 @@ knitr::kable(verification,
              caption = "Verification of EPSEM Property")
 ```
 
+Inference:
+
+In Week 11, we implemented a two-stage sampling design to achieve an Equal Probability of Selection Method (EPSEM) at the student level. This approach ensures that each student across Michigan has an equal chance of being selected for the study.
+
+**First-Stage Sampling: School Selection**
+
+We began by selecting schools using Probability Proportional to Size (PPS) sampling, where the probability of selecting a school is proportional to its Measure of Size (MOS). For example, in Region 7, a school with an MOS of 191,992 was selected. The sampling interval for this region was set at $m^*_7 = 21$, leading to a first-stage selection probability of:
+
+$$\pi_{school} = \frac{MOS_{school}}{\sum MOS_{Region,7}} = \frac{MOS_{school}}{21}$$
+
+This method ensures that larger schools have a higher chance of selection, aligning with the PPS approach.
+
+**Second-Stage Sampling: Student Selection Within Schools**
+
+Within the selected school, we aimed to sample students systematically to maintain EPSEM. The actual number of students enrolled was 219. To determine the within-school sampling rate, we used the formula:
+
+$$f_{2nd} = \frac{m^*7}{MOS{school}} = \frac{21}{191,992} \approx 0.000109$$
+
+This rate suggests that approximately 0.0109% of students should be sampled to maintain equal selection probability. Applying this rate to the actual school size:
+
+$$\text{Expected sample size} = 219 \times 0.000109 \approx 0.024$$
+
+However, this result indicates an expected sample size of less than one student, which is not feasible. This discrepancy arises due to the mismatch between the school's MOS and its actual enrollment, highlighting the need for adjustments in the sampling design.
+
+
+**Adjustments and Actual Sampling**
+
+Recognizing the impracticality of the initial sampling rate, we adjusted our approach. We determined a more practical within-school sampling rate by considering the desired number of students to sample. For instance, aiming to sample approximately 39 students from the 219 enrolled yields:
+
+$$f_{adjusted} = \frac{39}{219} \approx 0.1781$$
+
+Using this adjusted rate, we calculated the sampling interval:
+
+$$k = \frac{1}{f_{adjusted}} \approx 5.62$$
+
+We then performed systematic sampling with a random start between 1 and $k$, selecting every $k$-th student thereafter. This method ensured a representative sample of 39 students, with the following grade distribution:
+
+Grade 7: 17 students (43.6%)
+Grade 8: 22 students (56.4%)
+These proportions closely mirror the overall school distribution of 42.5% for Grade 7 and 57.5% for Grade 8, indicating the effectiveness of the adjusted sampling approach.
+
+**Verification of EPSEM**
+
+To confirm the EPSEM property, we calculated the overall selection probability for a student:
+
+$$\pi_{student} = \pi_{school} \times f_{adjusted} = \left(\frac{MOS_{school}}{\sum MOS_{Region,7}}\right) \times 0.1781$$
+
+Assuming the total MOS for Region 7 is known, this calculation provides the exact selection probability for each student, ensuring equal representation across the population.
