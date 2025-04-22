@@ -5,6 +5,10 @@ library(readxl)
 # Reading the Michigan school frame data
 mi_schools <- read_excel("MI_school_frame_head_counts.xls")
 
+# Inspect column names to verify the correct county identifier
+colnames(mi_schools)
+
+# Assuming the correct column is 'COUNTY_ID'
 # Creating a mapping of counties to regions
 region_mapping <- list(
   "1" = c(7, 31, 42, 66),
@@ -20,7 +24,7 @@ region_mapping <- list(
 
 # Creating a function to assign region based on county_id
 assign_region <- function(county_id) {
-  for(i in 1:length(region_mapping)) {
+  for(i in seq_along(region_mapping)) {
     if(county_id %in% region_mapping[[i]]) {
       return(as.character(i))
     }
@@ -28,21 +32,24 @@ assign_region <- function(county_id) {
   return(NA)
 }
 ```
+
 ```{r}
 # Adding region to the dataset
-mi_schools$region <- sapply(mi_schools$COUNTY_ID, assign_region)
+mi_schools <- mi_schools %>%
+  mutate(Region = sapply(COUNTY_ID, assign_region))
 
 # Calculating population totals by region
 region_totals <- mi_schools %>%
   group_by(Region) %>%
   summarize(
-    total_students = sum(tot_all),
+    total_students = sum(tot_all, na.rm = TRUE),
     n_schools = n()
   ) %>%
   mutate(
     prop_allocation = total_students / sum(total_students)
   )
 
+# Displaying the table
 knitr::kable(
   region_totals,
   col.names = c("Region", "Total Students", "Number of Schools", "Proportionate Allocation"),
@@ -64,4 +71,15 @@ region_totals %>%
     digits = c(0, 0, 0, 4, 0),
     caption = "Example Allocation with n=4224"
   )
+
 ```
+
+Inferences:
+
+Now, the analysis of Michigan school data provides a clear snapshot of how student populations are distributed across different regions and how this impacts sample allocation for future studies. What we did was that by mapping each county to its respective region and then summing up the total number of students and schools per region, we get a detailed view of the educational landscape.
+
+The results show that Region 9 stands out by far, containing nearly half (45%) of the state’s student population—over 374,000 students across 923 schools. Regions 7 and 8 also have substantial student bodies, each representing about 23% of the total. In contrast, regions like 1, 2, 3, and 4 have much smaller populations, each accounting for less than 1% of the total students.
+
+When it comes to proportionate sample allocation, these differences translate directly into how many students should be sampled from each region to ensure fair and representative coverage. For example, if suppose one has to plan on sampling 4,224 students statewide, almost 1,900 would come from Region 9 alone, while only 18 would be sampled from Region 1.
+
+This approach ensures that larger, more populous regions are appropriately represented in any statewide analysis, while smaller regions are not overlooked. It’s a practical application of proportional allocation in survey sampling, ensuring that the diversity and scale of Michigan’s student population are accurately reflected in any research or policy decisions.
