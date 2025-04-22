@@ -144,6 +144,25 @@ cat("Precision for Marijuana:", precision_marijuana, "\n")
 cat("Precision for Age:", precision_age, "\n")
 ```
 
+Inference:
 
+In week7, we focused on refining our cluster sampling design to optimize both cost and statistical precision. By analyzing the intraclass correlation coefficients (ICCs) for three key variables—ever smoked (0.0306), ever used marijuana (0.0204), and age at first approach (0.0143), we calculated the optimal number of students to sample within each cluster. 
+
+This resulted in subsample sizes of 44, 54, and 65 students, respectively. These figures balance the trade-off between the costs of sampling additional students and the benefits of increased precision.​
+
+Considering budget constraints, we determined that sampling 44 students per cluster would allow us to include approximately 96 clusters, totaling around 4,231 students. This configuration ensures that we stay within our $500,000 budget while maintaining a manageable cluster size.​
+
+We then calculated the design effects for each variable using the formula:​
+
+Design Effect=1+(Cluster Size−1)×ICC
+
+
+This yielded design effects of 2.32 for smoking, 1.88 for marijuana use, and 1.61 for age at first approach. These values indicate the extent to which the variance is inflated due to the clustering in our sampling design.​
+
+Subsequently, we computed the variances under both simple random sampling (SRS) and our cluster sampling design. For instance, the SRS variance for smoking was approximately 0.000044, which increased to 0.000103 under the cluster design. This increase is expected due to the design effect.​
+
+The sampling fraction, calculated as the total sample size divided by the population size (4,231 / 830,138), was approximately 0.0051. This small fraction results in a finite population correction (FPC) factor of about 0.9949, indicating a minimal impact on variance estimates.​
+
+Finally, we assessed the precision of our estimates by taking the square root of the variances under the cluster design. The precisions were approximately 0.0101 for smoking, 0.0075 for marijuana use, and 0.0195 for age at first approach. These values suggest that our sampling design achieves a reasonable balance between cost and statistical accuracy.​
 
 
