@@ -54,15 +54,18 @@ cat("Optimal number of clusters for Age: ", firstcluster_age, "\n")
 ## Selecting overall sample size
 
 ```{r}
-## Choosing to use the mean of the sample sizes
-m_opt_overall <- 44
+# Given parameters
+c_n <- 3000  # Cost per cluster
+c_m <- 50    # Cost per individual
+m_opt_overall <- 44  # Optimal number of individuals per cluster
+sampling_cost <- 500000  # Total budget
+
+# Calculate the optimal number of clusters
 n_opt <- sampling_cost / (c_n + m_opt_overall * c_m)
 n_total <- n_opt * m_opt_overall
 
-cat("Optimal number of subsample size (m):", m_opt_overall, "\n")
 cat("Optimal number of clusters (n_opt):", n_opt, "\n")
 cat("Overall sample size (n_total):", n_total, "\n")
-
 ```
 
 ## Design effect and sampling variance
