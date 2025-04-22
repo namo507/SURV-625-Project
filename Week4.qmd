@@ -4,68 +4,48 @@ format: pdf
 editor: visual
 ---
 
-##  Defining the Known Parameters
 ```{r}
-p_ever_smoked <- 0.25  # proportion ever smoked cigarettes
-p_ever_marijuana <- 0.15  # proportion ever smoked marijuana
-age_first_mean <- 12  # mean age first approach
-age_first_sd <- 1  # SD of age first approached
-cv_target <- 0.05  # desired coefficient of variation
-```
+# Define Known Parameters
+p_ever_smoked <- 0.25
+p_ever_marijuana <- 0.15
+age_first_mean <- 12
+age_first_sd <- 1
+cv_target <- 0.05
 
-## Calculating the element variances
-```{r}
-# Calculating Variance for binary proportions = p(1-p)
+# Calculate Element Variances
 var_ever_smoked <- p_ever_smoked * (1 - p_ever_smoked)
 var_ever_marijuana <- p_ever_marijuana * (1 - p_ever_marijuana)
-
-# Variance is SD squared
 var_age_first <- age_first_sd^2
 
-cat("Variance for ever smoked:", round(var_ever_smoked, 3), "\n")
-cat("Variance for ever marijuana:", round(var_ever_marijuana, 3), "\n")
-cat("Variance for age first approached:", round(var_age_first, 3), "\n")
-```
-
-## Calculating the desired sampling variances
-
-```{r}
-# Now the desired sampling variance = (CV * parameter)^2
+# Calculate Desired Sampling Variances
 desired_var_smoked <- (cv_target * p_ever_smoked)^2
 desired_var_marijuana <- (cv_target * p_ever_marijuana)^2
 desired_var_age <- (cv_target * age_first_mean)^2
 
-cat("Desired sampling variance for smoking:", round(desired_var_smoked, 4), "\n")
-cat("Desired sampling variance for marijuana:", round(desired_var_marijuana, 4), "\n")
-cat("Desired sampling variance for age:", round(desired_var_age, 4), "\n")
-```
-
-
-## SRS to calculate required sample sizes
-
-```{r}
-# Simply using the formula n = var / desired_var
+# Calculate Required Sample Sizes
 n_smoked <- var_ever_smoked / desired_var_smoked
 n_marijuana <- var_ever_marijuana / desired_var_marijuana
 n_age <- var_age_first / desired_var_age
 
-cat("Required sample size for smoking:", ceiling(n_smoked), "\n")
-cat("Required sample size for marijuana:", ceiling(n_marijuana), "\n")
-cat("Required sample size for age:", ceiling(n_age), "\n")
-```
-
-## Summarizing
-
-```{r}
+# Summarize Results
 results_df <- data.frame(
-  Variable = c("Ever Smoked", "Ever Marijuana", "Age First Approached"),
-  Parameter = c(p_ever_smoked, p_ever_marijuana, age_first_mean),
+  Variable = c("Ever Smoked", "Ever Used Marijuana", "Age First Approached"),
+  Mean_or_Proportion = c(p_ever_smoked, p_ever_marijuana, age_first_mean),
   Element_Variance = c(var_ever_smoked, var_ever_marijuana, var_age_first),
   Desired_Variance = c(desired_var_smoked, desired_var_marijuana, desired_var_age),
-  Required_n = ceiling(c(n_smoked, n_marijuana, n_age))
+  Required_Sample_Size = ceiling(c(n_smoked, n_marijuana, n_age))
 )
 
+# Display Results with Consistent Decimal Places
 knitr::kable(results_df, digits = 4)
 ```
 
 Inferences:
+
+Right! So the analysis reveals striking differences in required sample sizes across variables, driven by their inherent variability and prevalence. 
+
+We see that Ever Used Marijuana stands out, demanding the largest sample (2,267) to achieve a 5% coefficient of variation. This reflects its lower prevalence (15%) and higher relative variability, which amplifies uncertainty and necessitates more observations for precise estimation.
+
+Ever Smoked, with a higher prevalence (25%), requires fewer samples (1,200). The broader base of individuals who’ve smoked reduces variability, making it easier to estimate reliably.
+
+Most notably, Age First Approached defies expectations that only 3 samples are needed. This suggests remarkably low variability in the population (variance = 1.0), with most individuals reporting their first exposure around age 12. Interestingly, the tightly clustered data means even a tiny sample accurately captures the mean, highlighting a well-defined behavioral pattern.
